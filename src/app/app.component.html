@@ -1,7 +1,8 @@
 <mat-sidenav-container>
-	<mat-sidenav mode="side" #sidenav>Drawer content</mat-sidenav>
+	<mat-sidenav #sidenav>
+		<app-drawer></app-drawer>
+	</mat-sidenav>
 	<mat-sidenav-content>
-		<button (click)="sidenav.toggle()">toggle</button>
 		<router-outlet></router-outlet>
 	</mat-sidenav-content>
 
