@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { MatSidenav } from "@angular/material/sidenav";
 
 @Injectable({
-	providedIn: "root",
+	providedIn: "root"
 })
 export class SidenavService {
 	private sidenav?: MatSidenav;
@@ -13,9 +13,7 @@ export class SidenavService {
 
 	toggleSidenav(): void {
 		if (!this.sidenav) {
-			console.error(
-				"Sidenav is not registered, please register it using `registerSidenav` method"
-			);
+			console.error("Sidenav is not registered, please register it using `registerSidenav` method");
 			return;
 		}
 

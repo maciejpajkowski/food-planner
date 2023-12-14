@@ -3,13 +3,13 @@ import { TestBed } from "@angular/core/testing";
 import { SidenavService } from "./sidenav.service";
 import { MatSidenav } from "@angular/material/sidenav";
 
-fdescribe("SidenavService", () => {
-	const openSpy = jasmine.createSpy();
-	const closeSpy = jasmine.createSpy();
+describe("SidenavService", () => {
+	const openSpy = jasmine.createSpy("open").and.callFake(() => (fakeSidenav.opened = true));
+	const closeSpy = jasmine.createSpy("close").and.callFake(() => (fakeSidenav.opened = false));
 	const fakeSidenav = {
 		opened: false,
 		open: openSpy,
-		close: closeSpy,
+		close: closeSpy
 	} as unknown as MatSidenav;
 
 	let service: SidenavService;
@@ -24,7 +24,7 @@ fdescribe("SidenavService", () => {
 	});
 
 	it("should register sidenav", () => {
-		const consoleWarnSpy = spyOn(console, "error").and.callThrough();
+		const consoleWarnSpy = spyOn(console, "error").and.callFake(() => null);
 
 		service.toggleSidenav();
 
@@ -37,14 +37,15 @@ fdescribe("SidenavService", () => {
 	});
 
 	it("should open and close sidenav", () => {
+		fakeSidenav.opened = false;
 		service.registerSidenav(fakeSidenav);
 
 		service.toggleSidenav();
 
-		expect(closeSpy).toHaveBeenCalled();
+		expect(openSpy).toHaveBeenCalled();
 
 		service.toggleSidenav();
 
-		expect(openSpy).toHaveBeenCalled();
+		expect(closeSpy).toHaveBeenCalled();
 	});
 });

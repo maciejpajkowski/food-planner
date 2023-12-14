@@ -4,5 +4,5 @@ export const firebaseConfig = {
 	projectId: "food-planner-a7ad3",
 	storageBucket: "food-planner-a7ad3.appspot.com",
 	messagingSenderId: "954637078376",
-	appId: "1:954637078376:web:35327bdf95f8e0878510dd",
+	appId: "1:954637078376:web:35327bdf95f8e0878510dd"
 };

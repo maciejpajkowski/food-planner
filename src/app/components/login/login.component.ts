@@ -7,7 +7,7 @@ import { HeaderComponent } from "../header/header.component";
 	standalone: true,
 	imports: [HeaderComponent],
 	templateUrl: "./login.component.html",
-	styleUrl: "./login.component.scss",
+	styleUrl: "./login.component.scss"
 })
 export class LoginComponent {
 	private auth: Auth = inject(Auth);

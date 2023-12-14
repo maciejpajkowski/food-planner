@@ -1,12 +1,10 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 
 @Component({
-  selector: 'app-drawer',
-  standalone: true,
-  imports: [],
-  templateUrl: './drawer.component.html',
-  styleUrl: './drawer.component.scss'
+	selector: "app-drawer",
+	standalone: true,
+	imports: [],
+	templateUrl: "./drawer.component.html",
+	styleUrl: "./drawer.component.scss"
 })
-export class DrawerComponent {
-
-}
+export class DrawerComponent {}

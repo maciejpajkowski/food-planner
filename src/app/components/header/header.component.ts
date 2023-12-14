@@ -9,7 +9,7 @@ import { SidenavService } from "../../services/sidenav.service";
 	standalone: true,
 	imports: [MatToolbarModule, MatIconModule, MatButtonModule],
 	templateUrl: "./header.component.html",
-	styleUrl: "./header.component.scss",
+	styleUrl: "./header.component.scss"
 })
 export class HeaderComponent {
 	private readonly sidenavService = inject(SidenavService);

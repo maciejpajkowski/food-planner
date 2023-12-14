@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild, inject } from "@angular/core";
+import type { OnInit } from "@angular/core";
+import type { Observable } from "rxjs";
+import { Component, ViewChild, inject } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterOutlet } from "@angular/router";
 import { MatSidenav, MatSidenavModule } from "@angular/material/sidenav";
 import { Firestore, collection, collectionData } from "@angular/fire/firestore";
-import { Observable } from "rxjs";
 import { SidenavService } from "./services/sidenav.service";
 import { DrawerComponent } from "./components/drawer/drawer.component";
 
@@ -12,12 +13,12 @@ import { DrawerComponent } from "./components/drawer/drawer.component";
 	standalone: true,
 	imports: [CommonModule, MatSidenavModule, RouterOutlet, DrawerComponent],
 	templateUrl: "./app.component.html",
-	styleUrl: "./app.component.scss",
+	styleUrl: "./app.component.scss"
 })
 export class AppComponent implements OnInit {
 	@ViewChild("sidenav", { static: true }) sidenavRef: MatSidenav;
 
-	users$: Observable<any>;
+	users$: Observable<unknown>;
 
 	private readonly firestore = inject(Firestore);
 	private readonly sidenavService = inject(SidenavService);
