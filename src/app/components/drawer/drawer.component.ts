@@ -18,6 +18,7 @@ export class DrawerComponent {
 
 	async logOut() {
 		this.sidenav.toggleSidenav();
+
 		await signOut(this.auth);
 		await this.router.navigate(["/login"]);
 	}

@@ -11,16 +11,16 @@ export class SidenavService {
 		this.sidenav = sidenavRef;
 	}
 
-	toggleSidenav(): void {
+	async toggleSidenav(): Promise<void> {
 		if (!this.sidenav) {
 			console.error("Sidenav is not registered, please register it using `registerSidenav` method");
 			return;
 		}
 
 		if (this.sidenav.opened) {
-			this.sidenav.close();
+			await this.sidenav.close();
 		} else {
-			this.sidenav.open();
+			await this.sidenav.open();
 		}
 	}
 }
