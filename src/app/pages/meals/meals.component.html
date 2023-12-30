@@ -1,4 +1,26 @@
 <app-header>Meals</app-header>
 <div class="container">
 	<button type="button" mat-raised-button color="primary" (click)="onNewMealDialogOpen()">➕ Add a new meal</button>
+
+	<mat-divider></mat-divider>
+
+	<table mat-table [dataSource]="temporaryData">
+		<ng-container matColumnDef="title">
+			<th mat-header-cell *matHeaderCellDef> Title </th>
+			<td mat-cell *matCellDef="let element"> {{ element.title }} </td>
+		</ng-container>
+
+		<ng-container matColumnDef="ingredients">
+			<th mat-header-cell *matHeaderCellDef> Ingredients </th>
+			<td mat-cell *matCellDef="let element"> {{ element.ingredients }} </td>
+		</ng-container>
+
+		<ng-container matColumnDef="tags">
+			<th mat-header-cell *matHeaderCellDef> Tags </th>
+			<td mat-cell *matCellDef="let element"> {{ element.tags }} </td>
+		</ng-container>
+
+		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		<tr mat-row (click)="onMealClick(meal)" *matRowDef="let meal; columns: displayedColumns;"></tr>
+	</table>
 </div>

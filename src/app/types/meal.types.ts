@@ -4,5 +4,5 @@ export interface Meal {
 	id: number;
 	title: string;
 	ingredients: Ingredient[];
-	type: string[]; // breakfast, dinner, snack etc.
+	tags: string[]; // breakfast, dinner, snack etc.
 }
