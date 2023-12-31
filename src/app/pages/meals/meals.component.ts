@@ -39,11 +39,12 @@ export class MealsComponent {
 	];
 	displayedColumns = ["title", "ingredients", "tags"];
 
-	onNewMealDialogOpen(): void {
+	onAddNewMealClick(): void {
 		this.dialog.open(EditMealComponent);
 	}
 
 	onMealClick(data: Meal): void {
 		console.log(data); // temp
+		this.dialog.open(EditMealComponent, { data });
 	}
 }

@@ -1,1 +1,11 @@
-<p>edit-meal works!</p>
+@if (isEditMode) {
+    <h3>Editing {{ data.title }}</h3>
+} @else {
+    <h3>New meal</h3>
+}
+<form [formGroup]="formGroup">
+    <mat-form-field>
+        <mat-label>Title</mat-label>
+        <input matInput formControlName="title" />
+    </mat-form-field>
+</form>

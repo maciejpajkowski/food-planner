@@ -21,6 +21,7 @@ export class LoginComponent {
 
 	ngOnInit(): void {
 		this.auth.useDeviceLanguage();
+		this.onSignInSuccess();
 		this.userSubscription = this.user$.subscribe((user: User | null) => {
 			if (user !== null) this.onSignInSuccess();
 		});
