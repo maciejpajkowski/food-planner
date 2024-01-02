@@ -1,3 +1,16 @@
 mat-divider {
 	margin: 16px 0;
 }
+
+tr[mat-row] {
+	cursor: pointer;
+	transition: all 0.3s;
+
+	&:hover {
+		filter: brightness(85%);
+	}
+
+	&:active {
+		filter: brightness(65%);
+	}
+}

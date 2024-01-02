@@ -1,8 +1,10 @@
-import { Ingredient } from "./ingredient.types";
+import { IngredientId } from "./ingredient.types";
+
+export type MealId = number & { _meal_id_: never };
 
 export interface Meal {
-	id: number;
+	id: MealId;
 	name: string;
-	ingredients: Ingredient[];
+	ingredients: IngredientId[];
 	tags: string[]; // breakfast, dinner, snack
 }

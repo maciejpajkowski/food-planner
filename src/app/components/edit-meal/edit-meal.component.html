@@ -3,9 +3,32 @@
 } @else {
     <h3>New meal</h3>
 }
+
 <form [formGroup]="formGroup">
-    <mat-form-field>
-        <mat-label>Title</mat-label>
-        <input matInput formControlName="title" />
+    <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" placeholder="Name of your meal..." />
     </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Ingredients</mat-label>
+        <input matInput formControlName="ingredients" placeholder="Select ingredients" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Tags</mat-label>
+        <input matInput formControlName="tags" />
+		<mat-hint>Keywords that will be helpful when looking up the meal</mat-hint>
+    </mat-form-field>
+
+	<div class="edit-meal__actions">
+		<button type="button" mat-raised-button (click)="closeDialog()">Cancel</button>
+		<button type="submit" mat-raised-button color="primary">
+			@if (isEditMode) {
+				Update!
+			} @else {
+				Create!
+			}
+		</button>
+	</div>
 </form>
