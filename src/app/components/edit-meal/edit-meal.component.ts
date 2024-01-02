@@ -16,11 +16,11 @@ export class EditMealComponent implements OnInit {
 	formGroup: FormGroup;
 
 	constructor(@Inject(MAT_DIALOG_DATA) public readonly data: Meal) {}
-	
+
 	ngOnInit(): void {
 		this.isEditMode = Boolean(this.data);
 		this.formGroup = new FormGroup({
-			title: new FormControl(this.isEditMode ? this.data.title : "")
-		})
+			title: new FormControl(this.isEditMode ? this.data.name : "")
+		});
 	}
 }

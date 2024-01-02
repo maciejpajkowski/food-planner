@@ -5,38 +5,31 @@ import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { EditMealComponent } from "../../components/edit-meal/edit-meal.component";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatTableModule } from "@angular/material/table";
+import { MatChipsModule } from "@angular/material/chips";
 import { Meal } from "../../types/meal.types";
+import { MealsRepository } from "../../services/meals-repository.service";
+import { CommonModule } from "@angular/common";
 
 @Component({
 	selector: "app-meals",
 	standalone: true,
-	imports: [HeaderComponent, MatButtonModule, MatDialogModule, MatDividerModule, MatTableModule],
+	imports: [
+		CommonModule,
+		HeaderComponent,
+		MatButtonModule,
+		MatDialogModule,
+		MatDividerModule,
+		MatTableModule,
+		MatChipsModule
+	],
 	templateUrl: "./meals.component.html",
 	styleUrl: "./meals.component.scss"
 })
 export class MealsComponent {
 	private readonly dialog = inject(MatDialog);
+	private readonly mealsRepository = inject(MealsRepository);
 
-	temporaryData: Meal[] = [
-		{
-			id: 1,
-			ingredients: [],
-			title: "Pomidoro Classico",
-			tags: ["dinner"]
-		},
-		{
-			id: 2,
-			ingredients: [],
-			title: "Wolowina Teriyaki",
-			tags: ["dinner"]
-		},
-		{
-			id: 3,
-			ingredients: [],
-			title: "Budyn Owsiany",
-			tags: ["breakfast"]
-		}
-	];
+	meals$ = this.mealsRepository.meals$;
 	displayedColumns = ["title", "ingredients", "tags"];
 
 	onAddNewMealClick(): void {

@@ -2,7 +2,7 @@ import { Ingredient } from "./ingredient.types";
 
 export interface Meal {
 	id: number;
-	title: string;
+	name: string;
 	ingredients: Ingredient[];
-	tags: string[]; // breakfast, dinner, snack 
+	tags: string[]; // breakfast, dinner, snack
 }
