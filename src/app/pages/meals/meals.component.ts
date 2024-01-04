@@ -5,17 +5,11 @@ import { MatChipsModule } from "@angular/material/chips";
 import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatTableModule } from "@angular/material/table";
-import { Observable, combineLatest, map } from "rxjs";
 import { EditMealComponent } from "../../components/edit-meal/edit-meal.component";
 import { HeaderComponent } from "../../components/header/header.component";
-import { IngredientsRepository } from "../../services/ingredients-repository.service";
+import { IngredientIdToNamePipe } from "../../pipes/ingredient-id-to-name.pipe";
 import { MealsRepository } from "../../services/meals-repository.service";
 import { Meal } from "../../types/meal.types";
-import { IngredientId } from "../../types/ingredient.types";
-
-interface MealForDisplay extends Omit<Meal, "ingredients"> {
-	ingredients: string[];
-}
 
 @Component({
 	selector: "app-meals",
@@ -27,7 +21,8 @@ interface MealForDisplay extends Omit<Meal, "ingredients"> {
 		MatDialogModule,
 		MatDividerModule,
 		MatTableModule,
-		MatChipsModule
+		MatChipsModule,
+		IngredientIdToNamePipe
 	],
 	templateUrl: "./meals.component.html",
 	styleUrl: "./meals.component.scss"
@@ -35,33 +30,34 @@ interface MealForDisplay extends Omit<Meal, "ingredients"> {
 export class MealsComponent {
 	private readonly dialog = inject(MatDialog);
 	private readonly mealsRepository = inject(MealsRepository);
-	private readonly ingredientsRepository = inject(IngredientsRepository);
 
-	meals$: Observable<MealForDisplay[]> = combineLatest([
-		this.mealsRepository.meals$,
-		this.ingredientsRepository.ingredientsMap$
-	]).pipe(map(([meals, ingredientsMap]) => this.mapIngredientIdsToNames(meals, ingredientsMap)));
+	meals$ = this.mealsRepository.meals$$.asObservable();
 
 	displayedColumns = ["title", "ingredients", "tags"];
 
 	onAddNewMealClick(): void {
-		this.dialog.open(EditMealComponent);
+		this.dialog
+			.open(EditMealComponent)
+			.afterClosed()
+			.subscribe((result: Meal) => {
+				if (!result) return;
+
+				// 1. send data to firebase
+				// 2. upon receiving data back from it update meals$$ (this should also trigger view re-render)
+				console.log(result); // temporarily console log
+			});
 	}
 
 	onMealClick(data: Meal): void {
-		console.log(data); // temp
-		this.dialog.open(EditMealComponent, { data });
-	}
+		this.dialog
+			.open(EditMealComponent, { data })
+			.afterClosed()
+			.subscribe((result: Meal) => {
+				if (!result) return;
 
-	private mapIngredientIdsToNames(
-		meals: Meal[],
-		ingredientsMap: Map<IngredientId, string>
-	): MealForDisplay[] {
-		return meals.map((meal) => ({
-			...meal,
-			ingredients: meal.ingredients.map(
-				(ingredient) => ingredientsMap.get(ingredient) as string
-			)
-		}));
+				// 1. send data to firebase
+				// 2. upon receiving data back from it update meals$$ (this should also trigger view re-render)
+				console.log(result); // temporarily console log
+			});
 	}
 }

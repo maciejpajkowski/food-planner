@@ -7,22 +7,22 @@ import { IngredientId } from "../types/ingredient.types";
 	providedIn: "root"
 })
 export class MealsRepository {
-	meals$ = new BehaviorSubject<Meal[]>([
+	meals$$ = new BehaviorSubject<Meal[]>([
 		{
 			id: 1 as MealId,
-			ingredients: [1 as IngredientId, 2 as IngredientId],
+			ingredientIds: [1 as IngredientId, 2 as IngredientId, 3 as IngredientId],
 			name: "Pomidoro Classico",
 			tags: ["obiad", "kolacja"]
 		},
 		{
 			id: 2 as MealId,
-			ingredients: [],
+			ingredientIds: [],
 			name: "Wolowina Teriyaki",
 			tags: ["obiad"]
 		},
 		{
 			id: 3 as MealId,
-			ingredients: [],
+			ingredientIds: [],
 			name: "Budyn Owsiany",
 			tags: ["śniadanie"]
 		}
