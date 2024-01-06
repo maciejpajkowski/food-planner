@@ -70,10 +70,10 @@ export class EditMealComponent implements OnInit {
 
 	onSubmit(): void {
 		this.dialogRef.close({
-			id: this.data?.id, // add a new method in meal repo to generate a new ID
+			id: this.data?.id, // currently this returns undefined for new meal, it works because id is overridden in addMeal method, but this is not very elegant
 			name: this.name.value,
 			ingredientIds: this.assignedIngredientIds$$.value,
-			tags: this.data?.tags // unchanged for now, tags are not part of MVP
+			tags: this.data?.tags ?? [] // unchanged for now, tags are not part of MVP
 		} as Meal);
 	}
 }

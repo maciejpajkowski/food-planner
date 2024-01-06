@@ -1,30 +1,39 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { Meal, MealId } from "../types/meal.types";
-import { IngredientId } from "../types/ingredient.types";
+import { Meal } from "../types/meal.types";
+import { FirebaseClientService } from "./firebase-client.service";
+import { Auth } from "@angular/fire/auth";
 
 @Injectable({
 	providedIn: "root"
 })
 export class MealsRepository {
-	meals$$ = new BehaviorSubject<Meal[]>([
-		{
-			id: 1 as MealId,
-			ingredientIds: [1 as IngredientId, 2 as IngredientId, 3 as IngredientId],
-			name: "Pomidoro Classico",
-			tags: ["obiad", "kolacja"]
-		},
-		{
-			id: 2 as MealId,
-			ingredientIds: [],
-			name: "Wolowina Teriyaki",
-			tags: ["obiad"]
-		},
-		{
-			id: 3 as MealId,
-			ingredientIds: [],
-			name: "Budyn Owsiany",
-			tags: ["śniadanie"]
+	private readonly firebaseClient = inject(FirebaseClientService);
+	private readonly auth = inject(Auth);
+
+	private readonly meals$$ = new BehaviorSubject<Meal[]>([]);
+
+	meals$ = this.meals$$.asObservable();
+
+	async fetchMeals(): Promise<void> {
+		await this.auth.authStateReady();
+		const response = await this.firebaseClient.getDocs("meals");
+
+		this.meals$$.next(response.docs.map((doc) => doc.data() as Meal));
+	}
+
+	async addMeal(data: Omit<Meal, "id">): Promise<void> {
+		const id = this.generateNewMealId();
+		const meal = { ...data, id } as Meal;
+
+		try {
+			await this.firebaseClient.addOrUpdateDoc("meals", meal);
+		} catch (e) {
+			console.error("Oh shit, error:", e);
 		}
-	]);
+	}
+
+	private generateNewMealId(): number {
+		return Math.max(...this.meals$$.value.map((meal) => meal.id as number)) + 1;
+	}
 }

@@ -1,5 +1,7 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject } from "@angular/core";
+import { Component, OnInit, inject } from "@angular/core";
+import { Auth } from "@angular/fire/auth";
+import { Firestore } from "@angular/fire/firestore";
 import { MatButtonModule } from "@angular/material/button";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatDialog, MatDialogModule } from "@angular/material/dialog";
@@ -8,10 +10,9 @@ import { MatTableModule } from "@angular/material/table";
 import { EditMealComponent } from "../../components/edit-meal/edit-meal.component";
 import { HeaderComponent } from "../../components/header/header.component";
 import { IngredientIdToNamePipe } from "../../pipes/ingredient-id-to-name.pipe";
+import { FirebaseClientService } from "../../services/firebase-client.service";
 import { MealsRepository } from "../../services/meals-repository.service";
 import { Meal } from "../../types/meal.types";
-import { Firestore, doc, collection, setDoc, getDocs } from "@angular/fire/firestore";
-import { Auth } from "@angular/fire/auth";
 
 @Component({
 	selector: "app-meals",
@@ -29,26 +30,30 @@ import { Auth } from "@angular/fire/auth";
 	templateUrl: "./meals.component.html",
 	styleUrl: "./meals.component.scss"
 })
-export class MealsComponent {
+export class MealsComponent implements OnInit {
 	private readonly dialog = inject(MatDialog);
 	private readonly mealsRepository = inject(MealsRepository);
 	private readonly firestore = inject(Firestore);
 	private readonly auth = inject(Auth);
+	private readonly firebaseClient = inject(FirebaseClientService);
 
-	meals$ = this.mealsRepository.meals$$.asObservable();
+	meals$ = this.mealsRepository.meals$;
 
 	displayedColumns = ["title", "ingredients", "tags"];
+
+	ngOnInit(): void {
+		this.mealsRepository.fetchMeals();
+	}
 
 	onAddNewMealClick(): void {
 		this.dialog
 			.open(EditMealComponent)
 			.afterClosed()
-			.subscribe((result: Meal) => {
+			.subscribe(async (result: Meal) => {
 				if (!result) return;
 
-				// 1. send data to firebase
-				// 2. upon receiving data back from it update meals$$ (this should also trigger view re-render)
-				console.log(result); // temporarily console log
+				await this.mealsRepository.addMeal(result);
+				await this.mealsRepository.fetchMeals();
 			});
 	}
 
@@ -59,23 +64,8 @@ export class MealsComponent {
 			.subscribe(async (result: Meal) => {
 				if (!result) return;
 
-				// todo - move to firebase service
-				await setDoc(
-					doc(
-						collection(this.firestore, `users/${this.auth.currentUser?.uid}/meals`),
-						`${result.id}` // maybe more descriptive id? eg. id-kebab-cased-name
-					),
-					{
-						...result
-					}
-				);
-
-				// todo - move this + next() below to meals service once firebase client handles this
-				const response = await getDocs(
-					collection(this.firestore, `users/${this.auth.currentUser?.uid}/meals`)
-				);
-
-				this.mealsRepository.meals$$.next(response.docs.map((doc) => doc.data() as Meal));
+				await this.firebaseClient.addOrUpdateDoc("meals", result);
+				await this.mealsRepository.fetchMeals();
 			});
 	}
 }
