@@ -4,51 +4,50 @@
     <h3>New meal</h3>
 }
 
-<form>
-    <mat-form-field appearance="outline">
-        <mat-label>Name</mat-label>
-        <input matInput [formControl]="name" placeholder="Name of your meal..." />
-    </mat-form-field>
+<mat-form-field appearance="outline">
+	<mat-label>Name</mat-label>
+	<input matInput [formControl]="name" placeholder="Name of your meal..." />
+</mat-form-field>
 
-    <mat-form-field appearance="outline">
-        <mat-label>Ingredients</mat-label>
-        <input matInput [formControl]="ingredients" [matAutocomplete]="auto" placeholder="Select ingredients" />
-		<mat-autocomplete #auto="matAutocomplete">
-			@for (option of autocompleteIngredients$ | async; track option) {
-				<mat-option [value]="option">{{ option.name }}</mat-option>
-			}
-		</mat-autocomplete>
-
-		@if (data) {
-			<mat-chip-listbox>
-				@for (ingredientId of (assignedIngredientIds$$ | async); track ingredientId) {
-					<mat-chip>{{ ingredientId | ingredientIdToName }}</mat-chip>
-				}
-			</mat-chip-listbox>
+<mat-form-field appearance="outline">
+	<mat-label>Ingredients</mat-label>
+	<input matInput [formControl]="ingredients" [matAutocomplete]="autoIngredients" placeholder="Select ingredients" />
+	<mat-autocomplete #autoIngredients="matAutocomplete">
+		@for (option of autocompleteIngredients$ | async; track option) {
+			<mat-option [value]="option">{{ option.name }}</mat-option>
 		}
-    </mat-form-field>
+	</mat-autocomplete>
 
-    <mat-form-field appearance="outline">
-        <mat-label>Tags</mat-label>
-        <input matInput />
-		<mat-hint>Keywords that will be helpful when looking up the meal</mat-hint>
-		@if (data) {
-			<mat-chip-listbox>
-				@for (tag of data.tags; track tag) {
-					<mat-chip>{{ tag }}</mat-chip>
-				}
-			</mat-chip-listbox>
+	<mat-chip-listbox>
+		@for (ingredientId of assignedIngredientIds$$ | async; track ingredientId) {
+			<mat-chip (removed)="onIngredientRemoved(ingredientId)">
+				{{ ingredientId | ingredientIdToName }}
+				<button matChipRemove>
+					<mat-icon>cancel</mat-icon>
+				</button>
+			</mat-chip>
 		}
-    </mat-form-field>
+	</mat-chip-listbox>
+</mat-form-field>
 
-	<div class="edit-meal__actions">
-		<button type="button" mat-raised-button (click)="onCancel()">Cancel</button>
-		<button type="button" mat-raised-button color="primary" (click)="onSubmit()">
-			@if (isEditMode) {
-				Update!
-			} @else {
-				Create!
-			}
-		</button>
-	</div>
-</form>
+<mat-form-field appearance="outline">
+	<mat-label>Tags</mat-label>
+	<input matInput [formControl]="tags" placeholder="Add a tag..." (keydown.enter)="onTagEnter()" />
+	<mat-hint>Keywords that will be helpful when looking up the meal</mat-hint>
+	<mat-chip-listbox>
+		@for (tag of assignedTags$$ | async; track tag) {
+			<mat-chip>{{ tag }}</mat-chip>
+		}
+	</mat-chip-listbox>
+</mat-form-field>
+
+<div class="edit-meal__actions">
+	<button class="edit-meal__action-button" type="button" mat-raised-button (click)="onCancel()">Cancel</button>
+	<button class="edit-meal__action-button" type="button" mat-raised-button color="primary" (click)="onSubmit()">
+		@if (isEditMode) {
+			Update!
+		} @else {
+			Create!
+		}
+	</button>
+</div>

@@ -20,8 +20,6 @@ export class LoginComponent {
 	userSubscription: Subscription;
 
 	ngOnInit(): void {
-		this.auth.useDeviceLanguage();
-		this.onSignInSuccess();
 		this.userSubscription = this.user$.subscribe((user: User | null) => {
 			if (user !== null) this.onSignInSuccess();
 		});
@@ -32,6 +30,6 @@ export class LoginComponent {
 	}
 
 	onSignInFailure() {
-		console.error("oh shit");
+		console.error("Oh damn, something broke while trying to sign in");
 	}
 }

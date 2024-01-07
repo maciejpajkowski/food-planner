@@ -14,3 +14,10 @@ tr[mat-row] {
 		filter: brightness(65%);
 	}
 }
+
+.meals__loading-spinner {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 200px;
+}

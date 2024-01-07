@@ -29,7 +29,15 @@ export class MealsRepository {
 		try {
 			await this.firebaseClient.addOrUpdateDoc("meals", meal);
 		} catch (e) {
-			console.error("Oh shit, error:", e);
+			console.error("Oh man, error while adding meal:", e);
+		}
+	}
+
+	async editMeal(meal: Meal): Promise<void> {
+		try {
+			await this.firebaseClient.addOrUpdateDoc("meals", meal);
+		} catch (e) {
+			console.error("Oh man, error while editing meal:", e);
 		}
 	}
 
