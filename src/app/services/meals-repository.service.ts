@@ -1,6 +1,6 @@
 import { Injectable, inject } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { Meal } from "../types/meal.types";
+import { Meal, MealId } from "../types/meal.types";
 import { FirebaseClientService } from "./firebase-client.service";
 import { Auth } from "@angular/fire/auth";
 
@@ -11,7 +11,7 @@ export class MealsRepository {
 	private readonly firebaseClient = inject(FirebaseClientService);
 	private readonly auth = inject(Auth);
 
-	private readonly meals$$ = new BehaviorSubject<Meal[]>([]);
+	private readonly meals$$ = new BehaviorSubject<Meal[] | null>(null);
 
 	meals$ = this.meals$$.asObservable();
 
@@ -41,7 +41,15 @@ export class MealsRepository {
 		}
 	}
 
+	getNameFromId(id: MealId): string | undefined {
+		return this.meals$$.value?.find((meal) => id === meal.id)?.name;
+	}
+
 	private generateNewMealId(): number {
-		return Math.max(...this.meals$$.value.map((meal) => meal.id as number)) + 1;
+		if (this.meals$$.value) {
+			return Math.max(...this.meals$$.value.map((meal) => meal.id as number)) + 1;
+		} else {
+			throw new Error("Cannot generate new meal ID, meals$$ is empty");
+		}
 	}
 }

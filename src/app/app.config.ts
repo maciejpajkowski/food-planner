@@ -17,6 +17,9 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
 	signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID]
 };
 
+// add app_initializer to get meals and ingredients from db
+// https://angular.io/api/core/APP_INITIALIZER
+
 export const appConfig: ApplicationConfig = {
 	providers: [
 		{ provide: FIREBASE_OPTIONS, useValue: firebaseConfig },

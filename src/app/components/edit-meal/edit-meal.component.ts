@@ -52,7 +52,7 @@ export class EditMealComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.autocompleteIngredients$ = combineLatest([
-			this.ingredientsRepository.ingredients$$,
+			this.ingredientsRepository.ingredients$,
 			this.assignedIngredientIds$$
 		]).pipe(
 			map(([ingredients, assignedIngredientIds]) =>
@@ -80,6 +80,10 @@ export class EditMealComponent implements OnInit, OnDestroy {
 		this.assignedIngredientIds$$.next(
 			this.assignedIngredientIds$$.value.filter((id) => id !== idToRemove)
 		);
+	}
+
+	onTagRemoved(tagToRemove: string): void {
+		this.assignedTags$$.next(this.assignedTags$$.value.filter((tag) => tag !== tagToRemove));
 	}
 
 	onCancel(): void {

@@ -36,7 +36,12 @@
 	<mat-hint>Keywords that will be helpful when looking up the meal</mat-hint>
 	<mat-chip-listbox>
 		@for (tag of assignedTags$$ | async; track tag) {
-			<mat-chip>{{ tag }}</mat-chip>
+			<mat-chip (removed)="onTagRemoved(tag)">
+				{{ tag }}
+				<button matChipRemove>
+					<mat-icon>cancel</mat-icon>
+				</button>
+			</mat-chip>
 		}
 	</mat-chip-listbox>
 </mat-form-field>

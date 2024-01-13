@@ -7,7 +7,7 @@ import { MealId } from "../types/meal.types";
 	providedIn: "root"
 })
 export class IngredientsRepository {
-	ingredients$$ = new BehaviorSubject<Ingredient[]>([
+	private readonly ingredients$$ = new BehaviorSubject<Ingredient[]>([
 		{
 			id: 1 as IngredientId,
 			name: "Cukinia",
@@ -34,6 +34,8 @@ export class IngredientsRepository {
 			mealIds: []
 		}
 	]);
+
+	ingredients$ = this.ingredients$$.asObservable();
 
 	getNameFromId(id: IngredientId): string | undefined {
 		return this.ingredients$$.value.find((ingredient) => id === ingredient.id)?.name;

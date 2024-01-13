@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, OnInit, inject } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatDialog, MatDialogModule } from "@angular/material/dialog";
@@ -27,17 +27,13 @@ import { Meal } from "../../types/meal.types";
 	templateUrl: "./meals.component.html",
 	styleUrl: "./meals.component.scss"
 })
-export class MealsComponent implements OnInit {
+export class MealsComponent {
 	private readonly dialog = inject(MatDialog);
 	private readonly mealsRepository = inject(MealsRepository);
 
 	meals$ = this.mealsRepository.meals$;
 
-	displayedColumns = ["title", "ingredients", "tags"];
-
-	ngOnInit(): void {
-		this.mealsRepository.fetchMeals();
-	}
+	displayedColumns = ["name", "ingredients", "tags"];
 
 	onAddNewMealClick(): void {
 		this.dialog

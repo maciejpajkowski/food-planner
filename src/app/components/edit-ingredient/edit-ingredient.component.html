@@ -1,1 +1,21 @@
-<p>edit-ingredient works!</p>
+@if (isEditMode) {
+    <h3>Editing {{ data.name }}</h3>
+} @else {
+    <h3>New ingredient</h3>
+}
+
+<mat-form-field appearance="outline">
+	<mat-label>Name</mat-label>
+	<input matInput [formControl]="name" placeholder="Name of your ingredient..." />
+</mat-form-field>
+
+<div class="edit-ingredient__actions">
+	<button class="edit-ingredient__action-button" type="button" mat-raised-button (click)="onCancel()">Cancel</button>
+	<button class="edit-ingredient__action-button" type="button" mat-raised-button color="primary" (click)="onSubmit()">
+		@if (isEditMode) {
+			Update!
+		} @else {
+			Create!
+		}
+	</button>
+</div>

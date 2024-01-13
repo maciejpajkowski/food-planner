@@ -1,12 +1,11 @@
-import type { OnInit } from "@angular/core";
-import type { Observable } from "rxjs";
-import { Component, ViewChild, inject } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { RouterOutlet } from "@angular/router";
+import type { OnInit } from "@angular/core";
+import { Component, ViewChild, inject } from "@angular/core";
 import { MatSidenav, MatSidenavModule } from "@angular/material/sidenav";
-import { Firestore, collection, collectionData } from "@angular/fire/firestore";
-import { SidenavService } from "./services/sidenav.service";
+import { RouterOutlet } from "@angular/router";
 import { DrawerComponent } from "./components/drawer/drawer.component";
+import { MealsRepository } from "./services/meals-repository.service";
+import { SidenavService } from "./services/sidenav.service";
 
 @Component({
 	selector: "app-root",
@@ -18,14 +17,11 @@ import { DrawerComponent } from "./components/drawer/drawer.component";
 export class AppComponent implements OnInit {
 	@ViewChild("sidenav", { static: true }) sidenavRef: MatSidenav;
 
-	users$: Observable<unknown>;
-
-	private readonly firestore = inject(Firestore);
+	private readonly mealsRepository = inject(MealsRepository);
 	private readonly sidenavService = inject(SidenavService);
 
 	ngOnInit(): void {
-		const coll = collection(this.firestore, "users"); // temp
-		this.users$ = collectionData(coll); // temp
+		this.mealsRepository.fetchMeals();
 
 		this.sidenavService.registerSidenav(this.sidenavRef);
 	}
