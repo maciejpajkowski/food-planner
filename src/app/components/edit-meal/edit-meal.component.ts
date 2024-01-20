@@ -55,8 +55,11 @@ export class EditMealComponent implements OnInit, OnDestroy {
 			this.ingredientsRepository.ingredients$,
 			this.assignedIngredientIds$$
 		]).pipe(
-			map(([ingredients, assignedIngredientIds]) =>
-				ingredients.filter((ingredient) => !assignedIngredientIds.includes(ingredient.id))
+			map(
+				([ingredients, assignedIngredientIds]) =>
+					ingredients?.filter(
+						(ingredient) => !assignedIngredientIds.includes(ingredient.id)
+					) ?? []
 			)
 		);
 

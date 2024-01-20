@@ -1,4 +1,4 @@
-import { ApplicationConfig, importProvidersFrom } from "@angular/core";
+import { APP_INITIALIZER, ApplicationConfig, importProvidersFrom } from "@angular/core";
 import { provideRouter } from "@angular/router";
 import { provideFirebaseApp, initializeApp } from "@angular/fire/app";
 import { getFirestore, provideFirestore } from "@angular/fire/firestore";
@@ -11,17 +11,32 @@ import { firebaseConfig } from "../../firebase.config.prod";
 import { FirebaseUIModule } from "firebaseui-angular";
 import firebase from "firebase/compat/app";
 import firebaseui from "firebaseui";
+import { MealsRepository } from "./services/meals-repository.service";
+import { IngredientsRepository } from "./services/ingredients-repository.service";
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
 	signInFlow: "popup",
 	signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID]
 };
 
-// add app_initializer to get meals and ingredients from db
-// https://angular.io/api/core/APP_INITIALIZER
+function getInitialData(
+	mealsRepository: MealsRepository,
+	ingredientsRepository: IngredientsRepository
+) {
+	return async () => {
+		await mealsRepository.fetchMeals();
+		await ingredientsRepository.fetchIngredients();
+	};
+}
 
 export const appConfig: ApplicationConfig = {
 	providers: [
+		{
+			provide: APP_INITIALIZER,
+			useFactory: getInitialData,
+			multi: true,
+			deps: [MealsRepository, IngredientsRepository]
+		},
 		{ provide: FIREBASE_OPTIONS, useValue: firebaseConfig },
 		provideRouter(routes),
 		provideAnimations(),
