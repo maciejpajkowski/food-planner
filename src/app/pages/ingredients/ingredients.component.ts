@@ -9,7 +9,7 @@ import { EditIngredientComponent } from "../../components/edit-ingredient/edit-i
 import { HeaderComponent } from "../../components/header/header.component";
 import { MealIdToNamePipe } from "../../pipes/meal-id-to-name.pipe";
 import { IngredientsRepository } from "../../services/ingredients-repository.service";
-import { Ingredient } from "../../types/ingredient.types";
+import { Ingredient, IngredientId } from "../../types/ingredient.types";
 
 @Component({
 	selector: "app-ingredients",
@@ -43,11 +43,16 @@ export class IngredientsComponent {
 		this.dialog
 			.open(EditIngredientComponent, { data })
 			.afterClosed()
-			.subscribe(async (ingredient: Ingredient) => {
+			.subscribe(async (ingredient: Ingredient | { id: IngredientId; delete: true }) => {
 				if (!ingredient) return;
 
-				await this.ingredientsRepository.editIngredient(ingredient);
-				await this.ingredientsRepository.fetchIngredients();
+				if ("delete" in ingredient) {
+					await this.ingredientsRepository.delete(ingredient.id);
+					await this.ingredientsRepository.fetch();
+				} else {
+					await this.ingredientsRepository.update(ingredient);
+					await this.ingredientsRepository.fetch();
+				}
 			});
 	}
 }

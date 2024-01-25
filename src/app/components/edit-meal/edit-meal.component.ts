@@ -89,6 +89,10 @@ export class EditMealComponent implements OnInit, OnDestroy {
 		this.assignedTags$$.next(this.assignedTags$$.value.filter((tag) => tag !== tagToRemove));
 	}
 
+	onDelete(): void {
+		this.dialogRef.close({ id: this.data.id, delete: true });
+	}
+
 	onCancel(): void {
 		this.dialogRef.close();
 	}

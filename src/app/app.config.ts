@@ -24,8 +24,8 @@ function getInitialData(
 	ingredientsRepository: IngredientsRepository
 ) {
 	return async () => {
-		await mealsRepository.fetchMeals();
-		await ingredientsRepository.fetchIngredients();
+		await mealsRepository.fetch();
+		await ingredientsRepository.fetch();
 	};
 }
 

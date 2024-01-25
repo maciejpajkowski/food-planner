@@ -9,10 +9,11 @@ import {
 	deleteDoc,
 	doc,
 	getDocs,
-	setDoc
+	setDoc,
+	writeBatch
 } from "@angular/fire/firestore";
-import { Meal } from "../types/meal.types";
-import { Ingredient } from "../types/ingredient.types";
+import { Ingredient, IngredientId } from "../types/ingredient.types";
+import { Meal, MealId } from "../types/meal.types";
 
 const availableCollections = ["meals", "ingredients"] as const;
 type FirestoreCollectionName = (typeof availableCollections)[number];
@@ -36,8 +37,25 @@ export class FirebaseClientService {
 		});
 	}
 
-	async deleteDoc(collectionName: FirestoreCollectionName, data: Meal | Ingredient) {
-		return deleteDoc(doc(this.getCollection(collectionName), String(data.id)));
+	async updateMultipleDocs(
+		collectionName: FirestoreCollectionName,
+		itemsToUpdate: Meal[] | Ingredient[]
+	) {
+		const batch = writeBatch(this.firestore);
+
+		itemsToUpdate.forEach((item) => {
+			const itemRef = doc(this.getCollection(collectionName), String(item.id));
+
+			console.log({ item });
+
+			batch.update(itemRef, { ...item });
+		});
+
+		await batch.commit();
+	}
+
+	async deleteDoc(collectionName: FirestoreCollectionName, id: MealId | IngredientId) {
+		return deleteDoc(doc(this.getCollection(collectionName), String(id)));
 	}
 
 	private getCollection(

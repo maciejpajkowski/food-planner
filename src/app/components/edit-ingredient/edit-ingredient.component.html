@@ -9,7 +9,25 @@
 	<input matInput [formControl]="name" placeholder="Name of your ingredient..." />
 </mat-form-field>
 
+@if (assignedMealIds$$ | async; as assignedMealIds) {
+	<h4>Assigned meals:</h4>
+	<mat-list>
+		@for (mealId of assignedMealIds; track mealId) {
+			<mat-list-item>
+				<span matListItemTitle>🍲 {{ mealId | mealIdToName }}</span>
+			</mat-list-item>
+		}
+
+		@if (!assignedMealIds.length) {
+			<i>No meals use this ingredient yet</i>
+		}
+	</mat-list>
+}
+
 <div class="edit-ingredient__actions">
+	@if (isEditMode) {
+		<button class="edit-ingredient__action-button edit-ingredient__action-button--remove" type="button" mat-raised-button color="warn" (click)="onDelete()">Delete</button>
+	}
 	<button class="edit-ingredient__action-button" type="button" mat-raised-button (click)="onCancel()">Cancel</button>
 	<button class="edit-ingredient__action-button" type="button" mat-raised-button color="primary" (click)="onSubmit()">
 		@if (isEditMode) {

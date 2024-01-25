@@ -15,14 +15,14 @@ export class IngredientsRepository {
 
 	ingredients$ = this.ingredients$$.asObservable();
 
-	async fetchIngredients(): Promise<void> {
+	async fetch(): Promise<void> {
 		await this.auth.authStateReady();
 		const response = await this.firebaseClient.getDocs("ingredients");
 
 		this.ingredients$$.next(response.docs.map((doc) => doc.data() as Ingredient));
 	}
 
-	async addIngredient(data: Omit<Ingredient, "id">): Promise<void> {
+	async add(data: Omit<Ingredient, "id">): Promise<void> {
 		const id = this.generateNewIngredientId();
 		const ingredient = { ...data, id } as Ingredient;
 
@@ -33,12 +33,33 @@ export class IngredientsRepository {
 		}
 	}
 
-	async editIngredient(ingredient: Ingredient): Promise<void> {
+	async update(ingredient: Ingredient): Promise<void> {
 		try {
 			await this.firebaseClient.addOrUpdateDoc("ingredients", ingredient);
 		} catch (e) {
 			console.error("Oh man, error while editing ingredient:", e);
 		}
+	}
+
+	async delete(ingredientId: IngredientId): Promise<void> {
+		try {
+			await this.firebaseClient.deleteDoc("ingredients", ingredientId);
+		} catch (e) {
+			console.error("Oh man, error while removing ingredient:", e);
+		}
+	}
+
+	// assignMealToIngredients(meal: Meal): void {
+	// 	// 1. lista ID skladnikow z meala
+	// 	// 2. iteracja po nich, dla kazdego trzeba zlapac liste przypisanych meali
+	// }
+
+	getIngredientById(id: IngredientId): Ingredient | undefined {
+		return this.ingredients$$.value?.find((ingredient) => id === ingredient.id);
+	}
+
+	getMultipleIngredientsByIds(ids: IngredientId[]): Ingredient[] {
+		return ids.map((id) => this.getIngredientById(id)).filter(Boolean) as Ingredient[];
 	}
 
 	getNameFromId(id: IngredientId): string | undefined {

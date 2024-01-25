@@ -1,17 +1,16 @@
 import { CommonModule } from "@angular/common";
 import { Component, Inject } from "@angular/core";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
-import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatButtonModule } from "@angular/material/button";
-import { MatChipsModule } from "@angular/material/chips";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { BehaviorSubject, Subscription } from "rxjs";
 import { IngredientIdToNamePipe } from "../../pipes/ingredient-id-to-name.pipe";
 import { Ingredient } from "../../types/ingredient.types";
 import { MealId } from "../../types/meal.types";
 import { EditMealComponent } from "../edit-meal/edit-meal.component";
+import { MatListModule } from "@angular/material/list";
+import { MealIdToNamePipe } from "../../pipes/meal-id-to-name.pipe";
 
 @Component({
 	selector: "app-edit-ingredient",
@@ -21,10 +20,9 @@ import { EditMealComponent } from "../edit-meal/edit-meal.component";
 		ReactiveFormsModule,
 		MatInputModule,
 		MatButtonModule,
-		MatChipsModule,
-		MatAutocompleteModule,
-		MatIconModule,
-		IngredientIdToNamePipe
+		MatListModule,
+		IngredientIdToNamePipe,
+		MealIdToNamePipe
 	],
 	templateUrl: "./edit-ingredient.component.html",
 	styleUrl: "./edit-ingredient.component.scss"
@@ -46,6 +44,10 @@ export class EditIngredientComponent {
 
 	ngOnDestroy(): void {
 		this.subscription.unsubscribe();
+	}
+
+	onDelete(): void {
+		this.dialogRef.close({ id: this.data.id, delete: true });
 	}
 
 	onCancel(): void {

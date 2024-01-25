@@ -9,7 +9,7 @@ import { EditMealComponent } from "../../components/edit-meal/edit-meal.componen
 import { HeaderComponent } from "../../components/header/header.component";
 import { IngredientIdToNamePipe } from "../../pipes/ingredient-id-to-name.pipe";
 import { MealsRepository } from "../../services/meals-repository.service";
-import { Meal } from "../../types/meal.types";
+import { Meal, MealId } from "../../types/meal.types";
 
 @Component({
 	selector: "app-meals",
@@ -42,8 +42,8 @@ export class MealsComponent {
 			.subscribe(async (meal: Meal) => {
 				if (!meal) return;
 
-				await this.mealsRepository.addMeal(meal);
-				await this.mealsRepository.fetchMeals();
+				await this.mealsRepository.add(meal);
+				await this.mealsRepository.fetch();
 			});
 	}
 
@@ -51,11 +51,16 @@ export class MealsComponent {
 		this.dialog
 			.open(EditMealComponent, { data })
 			.afterClosed()
-			.subscribe(async (meal: Meal) => {
+			.subscribe(async (meal: Meal | { id: MealId; delete: true }) => {
 				if (!meal) return;
 
-				await this.mealsRepository.editMeal(meal);
-				await this.mealsRepository.fetchMeals();
+				if ("delete" in meal) {
+					await this.mealsRepository.delete(meal.id);
+					await this.mealsRepository.fetch();
+				} else {
+					await this.mealsRepository.update(meal);
+					await this.mealsRepository.fetch();
+				}
 			});
 	}
 }

@@ -47,6 +47,9 @@
 </mat-form-field>
 
 <div class="edit-meal__actions">
+	@if (isEditMode) {
+		<button class="edit-meal__action-button edit-meal__action-button--remove" type="button" mat-raised-button color="warn" (click)="onDelete()">Delete</button>
+	}
 	<button class="edit-meal__action-button" type="button" mat-raised-button (click)="onCancel()">Cancel</button>
 	<button class="edit-meal__action-button" type="button" mat-raised-button color="primary" (click)="onSubmit()">
 		@if (isEditMode) {
