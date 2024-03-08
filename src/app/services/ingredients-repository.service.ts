@@ -2,13 +2,13 @@ import { Injectable, inject } from "@angular/core";
 import { Auth } from "@angular/fire/auth";
 import { BehaviorSubject } from "rxjs";
 import { Ingredient, IngredientId } from "../types/ingredient.types";
-import { FirebaseClientService } from "./firebase-client.service";
+import { FirebaseClient } from "./firebase-client.service";
 
 @Injectable({
 	providedIn: "root"
 })
 export class IngredientsRepository {
-	private readonly firebaseClient = inject(FirebaseClientService);
+	private readonly firebaseClient = inject(FirebaseClient);
 	private readonly auth = inject(Auth);
 
 	private readonly ingredients$$ = new BehaviorSubject<Ingredient[] | null>(null);
@@ -17,6 +17,11 @@ export class IngredientsRepository {
 
 	async fetch(): Promise<void> {
 		await this.auth.authStateReady();
+
+		if (!this.auth.currentUser) {
+			this.ingredients$$.next([]);
+			return;
+		}
 		const response = await this.firebaseClient.getDocs("ingredients");
 
 		this.ingredients$$.next(response.docs.map((doc) => doc.data() as Ingredient));

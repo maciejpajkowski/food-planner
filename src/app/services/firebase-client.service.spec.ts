@@ -1,16 +1,16 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { FirebaseClientService } from './firebase-client.service';
+import { FirebaseClient } from "./firebase-client.service";
 
-describe('FirebaseClientService', () => {
-  let service: FirebaseClientService;
+describe("FirebaseClient", () => {
+	let service: FirebaseClient;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(FirebaseClientService);
-  });
+	beforeEach(() => {
+		TestBed.configureTestingModule({});
+		service = TestBed.inject(FirebaseClient);
+	});
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
+	it("should be created", () => {
+		expect(service).toBeTruthy();
+	});
 });

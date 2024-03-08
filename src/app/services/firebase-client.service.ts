@@ -21,7 +21,7 @@ type FirestoreCollectionName = (typeof availableCollections)[number];
 @Injectable({
 	providedIn: "root"
 })
-export class FirebaseClientService {
+export class FirebaseClient {
 	private readonly firestore = inject(Firestore);
 	private readonly auth = inject(Auth);
 

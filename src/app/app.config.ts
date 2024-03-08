@@ -1,18 +1,18 @@
 import { APP_INITIALIZER, ApplicationConfig, importProvidersFrom } from "@angular/core";
-import { provideRouter } from "@angular/router";
-import { provideFirebaseApp, initializeApp } from "@angular/fire/app";
-import { getFirestore, provideFirestore } from "@angular/fire/firestore";
+import { initializeApp, provideFirebaseApp } from "@angular/fire/app";
 import { getAuth, provideAuth } from "@angular/fire/auth";
 import { FIREBASE_OPTIONS } from "@angular/fire/compat";
+import { getFirestore, provideFirestore } from "@angular/fire/firestore";
+import { provideRouter } from "@angular/router";
 
-import { routes } from "./app.routes";
 import { provideAnimations } from "@angular/platform-browser/animations";
-import { firebaseConfig } from "../../firebase.config.prod";
-import { FirebaseUIModule } from "firebaseui-angular";
 import firebase from "firebase/compat/app";
 import firebaseui from "firebaseui";
-import { MealsRepository } from "./services/meals-repository.service";
+import { FirebaseUIModule } from "firebaseui-angular";
+import { firebaseConfig } from "../../firebase.config.prod";
+import { routes } from "./app.routes";
 import { IngredientsRepository } from "./services/ingredients-repository.service";
+import { MealsRepository } from "./services/meals-repository.service";
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
 	signInFlow: "popup",

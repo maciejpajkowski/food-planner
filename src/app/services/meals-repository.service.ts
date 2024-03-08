@@ -1,7 +1,7 @@
 import { Injectable, inject } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 import { Meal, MealId } from "../types/meal.types";
-import { FirebaseClientService } from "./firebase-client.service";
+import { FirebaseClient } from "./firebase-client.service";
 import { Auth } from "@angular/fire/auth";
 import { IngredientsRepository } from "./ingredients-repository.service";
 
@@ -9,7 +9,7 @@ import { IngredientsRepository } from "./ingredients-repository.service";
 	providedIn: "root"
 })
 export class MealsRepository {
-	private readonly firebaseClient = inject(FirebaseClientService);
+	private readonly firebaseClient = inject(FirebaseClient);
 	private readonly ingredientsRepository = inject(IngredientsRepository);
 	private readonly auth = inject(Auth);
 
@@ -19,6 +19,12 @@ export class MealsRepository {
 
 	async fetch(): Promise<void> {
 		await this.auth.authStateReady();
+
+		if (!this.auth.currentUser) {
+			this.meals$$.next([]);
+			return;
+		}
+
 		const response = await this.firebaseClient.getDocs("meals");
 
 		this.meals$$.next(response.docs.map((doc) => doc.data() as Meal));
