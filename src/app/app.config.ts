@@ -13,6 +13,7 @@ import { firebaseConfig } from "../../firebase.config.prod";
 import { routes } from "./app.routes";
 import { IngredientsRepository } from "./services/ingredients-repository.service";
 import { MealsRepository } from "./services/meals-repository.service";
+import { WeekRepository } from "./services/week-repository.service";
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
 	signInFlow: "popup",
@@ -21,11 +22,13 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
 
 function getInitialData(
 	mealsRepository: MealsRepository,
-	ingredientsRepository: IngredientsRepository
+	ingredientsRepository: IngredientsRepository,
+	weekRepository: WeekRepository
 ) {
 	return async () => {
 		await mealsRepository.fetch();
 		await ingredientsRepository.fetch();
+		await weekRepository.fetch();
 	};
 }
 
@@ -35,7 +38,7 @@ export const appConfig: ApplicationConfig = {
 			provide: APP_INITIALIZER,
 			useFactory: getInitialData,
 			multi: true,
-			deps: [MealsRepository, IngredientsRepository]
+			deps: [MealsRepository, IngredientsRepository, WeekRepository]
 		},
 		{ provide: FIREBASE_OPTIONS, useValue: firebaseConfig },
 		provideRouter(routes),

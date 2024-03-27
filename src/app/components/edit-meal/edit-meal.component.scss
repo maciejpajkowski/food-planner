@@ -1,14 +1,20 @@
 :host {
-    display: block;
-    padding: 16px;
+	display: block;
+	padding: 16px;
 }
 
 h3 {
-    font-weight: 600;
+	font-weight: 600;
 }
 
 mat-form-field {
 	width: 100%;
+}
+
+.edit-meal__actions {
+	margin-top: 24px;
+	display: flex;
+	justify-content: flex-end;
 }
 
 .edit-meal__action-button {
@@ -17,10 +23,4 @@ mat-form-field {
 
 .edit-meal__action-button--remove {
 	margin-right: auto;
-}
-
-.edit-meal__actions {
-	margin-top: 24px;
-	display: flex;
-	justify-content: flex-end;
 }

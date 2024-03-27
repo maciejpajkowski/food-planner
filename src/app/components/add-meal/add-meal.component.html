@@ -1,0 +1,25 @@
+<h3>Add meal</h3>
+
+<mat-form-field appearance="outline">
+	<mat-label>Pick a meal!</mat-label>
+	<mat-select [(value)]="selectedMeal">
+		@for (meal of mealsRepository.meals$ | async; track meal) {
+			<mat-option [value]="meal.id">{{ meal.name }}</mat-option>
+		}
+	</mat-select>
+</mat-form-field>
+
+<div class="add-meal__actions">
+	<button class="add-meal__action-button" type="button" mat-raised-button (click)="onCancel()">
+		Cancel
+	</button>
+	<button
+		class="add-meal__action-button"
+		type="button"
+		mat-raised-button
+		color="primary"
+		(click)="onSubmit()"
+	>
+		Add!
+	</button>
+</div>
