@@ -11,33 +11,39 @@ import { ChangeDetectionStrategy, Component, ViewChild, inject } from "@angular/
 import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatTableModule } from "@angular/material/table";
-import { tap } from "rxjs";
+import { map, tap } from "rxjs";
 import { AddMealComponent } from "../../components/add-meal/add-meal.component";
 import { HeaderComponent } from "../../components/header/header.component";
 import { MealIdToNamePipe } from "../../pipes/meal-id-to-name.pipe";
 import { WeekRepository } from "../../services/week-repository.service";
-import { Week } from "../../types/days.types";
+import { Week, WeekId } from "../../types/days.types";
 import { MealId } from "../../types/meal.types";
+import { MatButtonModule } from "@angular/material/button";
+import { MatSelectModule } from "@angular/material/select";
+import { WeekIdToDateRangePipe } from "../../pipes/week-id-to-date-range.pipe";
 
 @Component({
-	selector: "app-main-view",
+	selector: "app-plan",
 	standalone: true,
 	imports: [
 		CommonModule,
 		HeaderComponent,
 		AddMealComponent,
 		MatSidenavModule,
+		MatButtonModule,
+		MatSelectModule,
 		MatTableModule,
 		MatDialogModule,
 		DragDropModule,
-		MealIdToNamePipe
+		MealIdToNamePipe,
+		WeekIdToDateRangePipe
 	],
-	templateUrl: "./main-view.component.html",
-	styleUrl: "./main-view.component.scss",
+	templateUrl: "./plan.component.html",
+	styleUrl: "./plan.component.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MainViewComponent {
-	private readonly weekRepository = inject(WeekRepository);
+export class PlanComponent {
+	public readonly weekRepository = inject(WeekRepository);
 	private readonly dialog = inject(MatDialog);
 
 	@ViewChild("dropListGroup") group: CdkDropListGroup<CdkDropList>;
@@ -66,6 +72,8 @@ export class MainViewComponent {
 			this.sundayMeals = dayMeals[6];
 		})
 	);
+
+	weekIds$ = this.weekRepository.weeks$.pipe(map((weeksMap) => [...weeksMap.keys()]));
 
 	async handleDrop(event: CdkDragDrop<MealId[]>): Promise<void> {
 		if (event.previousContainer === event.container) {
@@ -97,6 +105,10 @@ export class MainViewComponent {
 				dayMeals.push(selectedMeal);
 				await this.updateWeek();
 			});
+	}
+
+	onWeekSelectionChange(weekId: WeekId): void {
+		this.weekRepository.setActiveWeekId(weekId);
 	}
 
 	private async updateWeek(): Promise<void> {

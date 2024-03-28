@@ -26,7 +26,7 @@ export class LoginComponent {
 	}
 
 	onSignInSuccess() {
-		this.router.navigate(["/main-view"]);
+		this.router.navigate(["/plan"]);
 	}
 
 	onSignInFailure() {

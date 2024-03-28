@@ -28,7 +28,7 @@ function getInitialData(
 	return async () => {
 		await mealsRepository.fetch();
 		await ingredientsRepository.fetch();
-		await weekRepository.fetch();
+		await weekRepository.fetchAllWeeks();
 	};
 }
 

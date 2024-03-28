@@ -1,14 +1,31 @@
-.main-view {
+.plan {
 	padding: 24px;
 }
 
-.main-view__week {
+.plan__week-select-wrapper {
+	display: inline-flex;
+	margin-right: auto;
+	align-items: center;
+	margin-bottom: 32px;
+}
+
+.plan__week-select {
+	width: 260px;
+	text-align: center;
+}
+
+.plan__week-select,
+.plan__next-week-button {
+	margin-left: 16px;
+}
+
+.plan__week {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-evenly;
 }
 
-.main-view__day {
+.plan__day {
 	max-width: 100%;
 	margin: 0 25px 25px 0;
 	display: inline-block;
@@ -20,7 +37,7 @@
 	}
 }
 
-.main-view__day-list {
+.plan__day-list {
 	border: solid 1px #ccc;
 	min-height: 60px;
 	background: white;
@@ -29,7 +46,7 @@
 	display: block;
 }
 
-.main-view__meal {
+.plan__meal {
 	padding: 20px 10px;
 	border-bottom: solid 1px #ccc;
 	color: rgba(0, 0, 0, 0.87);
@@ -44,11 +61,11 @@
 	font-size: 14px;
 }
 
-.main-view__meal--static {
+.plan__meal--static {
 	cursor: default;
 }
 
-.main-view__delete-meal-button {
+.plan__delete-meal-button {
 	position: absolute;
 	top: 2px;
 	right: 4px;
@@ -56,11 +73,12 @@
 	cursor: pointer;
 }
 
-.main-view__add-meal-button {
+.plan__add-meal-button {
 	border: none;
 	background: lightgreen;
 	width: 100%;
 	cursor: pointer;
+	margin-top: 8px;
 	transition: all 0.3s;
 }
 
@@ -81,10 +99,10 @@
 	transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-.main-view__meal:last-child {
+.plan__meal:last-child {
 	border: none;
 }
 
-.main-view__day-list.cdk-drop-list-dragging .main-view__meal:not(.cdk-drag-placeholder) {
+.plan__day-list.cdk-drop-list-dragging .plan__meal:not(.cdk-drag-placeholder) {
 	transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }

@@ -1,0 +1,264 @@
+<app-header>Plan</app-header>
+<div class="plan">
+	<div class="plan__week-select-wrapper">
+		<button mat-raised-button class="plan__previous-week-button"><</button>
+		<mat-select
+			class="plan__week-select"
+			(valueChange)="onWeekSelectionChange($event)"
+			[value]="weekRepository.activeWeekId$ | async"
+		>
+			@for (weekId of weekIds$ | async; track weekId) {
+				<mat-option [value]="weekId">{{ weekId | weekIdToDateRange }}</mat-option>
+			}
+		</mat-select>
+		<button mat-raised-button class="plan__next-week-button">></button>
+	</div>
+	@if (week$ | async; as week) {
+		<div #dropListGroup cdkDropListGroup class="plan__week">
+			<div class="plan__day">
+				<h2>Monday</h2>
+				<h4>{{ weekDates[0] }}</h4>
+
+				<div
+					class="plan__day-list"
+					cdkDropList
+					#monday="cdkDropList"
+					[cdkDropListData]="mondayMeals"
+					(cdkDropListDropped)="handleDrop($event)"
+				>
+					@for (item of mondayMeals; track item) {
+						<div class="plan__meal" cdkDrag>
+							{{ item | mealIdToName }}
+							<div
+								class="plan__delete-meal-button"
+								(click)="onMealDelete(item, mondayMeals)"
+							>
+								X
+							</div>
+						</div>
+					} @empty {
+						<div class="plan__meal plan__meal--static">No ingredients assigned yet</div>
+					}
+				</div>
+				<button
+					mat-raised-button
+					color="primary"
+					class="plan__add-meal-button"
+					(click)="onMealAdd(mondayMeals)"
+				>
+					➕ Add meal
+				</button>
+			</div>
+
+			<div class="plan__day">
+				<h2>Tuesday</h2>
+				<h4>{{ weekDates[1] }}</h4>
+
+				<div
+					cdkDropList
+					#tuesday="cdkDropList"
+					[cdkDropListData]="tuesdayMeals"
+					class="plan__day-list"
+					(cdkDropListDropped)="handleDrop($event)"
+				>
+					@for (item of tuesdayMeals; track item) {
+						<div class="plan__meal" cdkDrag>
+							{{ item | mealIdToName }}
+							<div
+								class="plan__delete-meal-button"
+								(click)="onMealDelete(item, tuesdayMeals)"
+							>
+								X
+							</div>
+						</div>
+					} @empty {
+						<div class="plan__meal plan__meal--static">No ingredients assigned yet</div>
+					}
+				</div>
+				<button
+					mat-raised-button
+					color="primary"
+					class="plan__add-meal-button"
+					(click)="onMealAdd(tuesdayMeals)"
+				>
+					➕ Add meal
+				</button>
+			</div>
+
+			<div class="plan__day">
+				<h2>Wednesday</h2>
+				<h4>{{ weekDates[2] }}</h4>
+
+				<div
+					cdkDropList
+					#wednesday="cdkDropList"
+					[cdkDropListData]="wednesdayMeals"
+					class="plan__day-list"
+					(cdkDropListDropped)="handleDrop($event)"
+				>
+					@for (item of wednesdayMeals; track item) {
+						<div class="plan__meal" cdkDrag>
+							{{ item | mealIdToName }}
+							<div
+								class="plan__delete-meal-button"
+								(click)="onMealDelete(item, wednesdayMeals)"
+							>
+								X
+							</div>
+						</div>
+					} @empty {
+						<div class="plan__meal plan__meal--static">No ingredients assigned yet</div>
+					}
+				</div>
+				<button
+					mat-raised-button
+					color="primary"
+					class="plan__add-meal-button"
+					(click)="onMealAdd(wednesdayMeals)"
+				>
+					➕ Add meal
+				</button>
+			</div>
+
+			<div class="plan__day">
+				<h2>Thursday</h2>
+				<h4>{{ weekDates[3] }}</h4>
+
+				<div
+					cdkDropList
+					#thursday="cdkDropList"
+					[cdkDropListData]="thursdayMeals"
+					class="plan__day-list"
+					(cdkDropListDropped)="handleDrop($event)"
+				>
+					@for (item of thursdayMeals; track item) {
+						<div class="plan__meal" cdkDrag>
+							{{ item | mealIdToName }}
+							<div
+								class="plan__delete-meal-button"
+								(click)="onMealDelete(item, thursdayMeals)"
+							>
+								X
+							</div>
+						</div>
+					} @empty {
+						<div class="plan__meal plan__meal--static">No ingredients assigned yet</div>
+					}
+				</div>
+				<button
+					mat-raised-button
+					color="primary"
+					class="plan__add-meal-button"
+					(click)="onMealAdd(thursdayMeals)"
+				>
+					➕ Add meal
+				</button>
+			</div>
+
+			<div class="plan__day">
+				<h2>Friday</h2>
+				<h4>{{ weekDates[4] }}</h4>
+
+				<div
+					cdkDropList
+					#friday="cdkDropList"
+					[cdkDropListData]="fridayMeals"
+					class="plan__day-list"
+					(cdkDropListDropped)="handleDrop($event)"
+				>
+					@for (item of fridayMeals; track item) {
+						<div class="plan__meal" cdkDrag>
+							{{ item | mealIdToName }}
+							<div
+								class="plan__delete-meal-button"
+								(click)="onMealDelete(item, fridayMeals)"
+							>
+								X
+							</div>
+						</div>
+					} @empty {
+						<div class="plan__meal plan__meal--static">No ingredients assigned yet</div>
+					}
+				</div>
+				<button
+					mat-raised-button
+					color="primary"
+					class="plan__add-meal-button"
+					(click)="onMealAdd(fridayMeals)"
+				>
+					➕ Add meal
+				</button>
+			</div>
+
+			<div class="plan__day">
+				<h2>Saturday</h2>
+				<h4>{{ weekDates[5] }}</h4>
+
+				<div
+					cdkDropList
+					#saturday="cdkDropList"
+					[cdkDropListData]="saturdayMeals"
+					class="plan__day-list"
+					(cdkDropListDropped)="handleDrop($event)"
+				>
+					@for (item of saturdayMeals; track item) {
+						<div class="plan__meal" cdkDrag>
+							{{ item | mealIdToName }}
+							<div
+								class="plan__delete-meal-button"
+								(click)="onMealDelete(item, saturdayMeals)"
+							>
+								X
+							</div>
+						</div>
+					} @empty {
+						<div class="plan__meal plan__meal--static">No ingredients assigned yet</div>
+					}
+				</div>
+				<button
+					mat-raised-button
+					color="primary"
+					class="plan__add-meal-button"
+					(click)="onMealAdd(saturdayMeals)"
+				>
+					➕ Add meal
+				</button>
+			</div>
+
+			<div class="plan__day">
+				<h2>Sunday</h2>
+				<h4>{{ weekDates[6] }}</h4>
+
+				<div
+					cdkDropList
+					#sunday="cdkDropList"
+					[cdkDropListData]="sundayMeals"
+					class="plan__day-list"
+					(cdkDropListDropped)="handleDrop($event)"
+				>
+					@for (item of sundayMeals; track item) {
+						<div class="plan__meal" cdkDrag>
+							{{ item | mealIdToName }}
+							<div
+								class="plan__delete-meal-button"
+								(click)="onMealDelete(item, sundayMeals)"
+							>
+								X
+							</div>
+						</div>
+					} @empty {
+						<div class="plan__meal plan__meal--static">No ingredients assigned yet</div>
+					}
+				</div>
+				<button
+					mat-raised-button
+					color="primary"
+					class="plan__add-meal-button"
+					(click)="onMealAdd(sundayMeals)"
+				>
+					➕ Add meal
+				</button>
+			</div>
+		</div>
+	}
+</div>
