@@ -1,8 +1,8 @@
 import { Injectable, inject } from "@angular/core";
 import { Auth } from "@angular/fire/auth";
-import { compareAsc, getISOWeek, getYear } from "date-fns";
+import { compareAsc, format, getISOWeek, getYear, parseISO } from "date-fns";
 import { DocumentData } from "firebase/firestore";
-import { ReplaySubject } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 import { Week, WeekId } from "../types/days.types";
 import { MealId } from "../types/meal.types";
 import { FirebaseClient } from "./firebase-client.service";
@@ -14,9 +14,9 @@ export class WeekRepository {
 	private readonly auth = inject(Auth);
 	private readonly firebaseClient = inject(FirebaseClient);
 
-	private readonly week$$ = new ReplaySubject<Week>(1);
-	private readonly weeks$$ = new ReplaySubject<Map<WeekId, Week>>(1);
-	private readonly activeWeekId$$ = new ReplaySubject<WeekId>(1);
+	private readonly week$$ = new BehaviorSubject<Week>(new Map());
+	private readonly weeks$$ = new BehaviorSubject<Map<WeekId, Week>>(new Map());
+	private readonly activeWeekId$$ = new BehaviorSubject<WeekId | null>(null);
 
 	readonly week$ = this.week$$.asObservable();
 	readonly weeks$ = this.weeks$$.asObservable();
@@ -28,12 +28,11 @@ export class WeekRepository {
 		const response = await this.firebaseClient.getDocs("weeks");
 
 		const weeks = new Map<WeekId, Week>();
-		response.docs.forEach((doc) => {
-			const weekId = doc.id as WeekId;
-
-			weeks.set(weekId, this.buildWeekFromDocData(doc.data()));
-		});
-		console.log(weeks);
+		response.docs
+			.sort((a, b) => compareAsc(parseISO(a.id), parseISO(b.id)))
+			.forEach((doc) => {
+				weeks.set(doc.id as WeekId, this.buildWeekFromDocData(doc.data()));
+			});
 
 		this.weeks$$.next(weeks);
 		this.week$$.next([...weeks.values()].at(-1) as Week);
@@ -51,9 +50,8 @@ export class WeekRepository {
 		}
 	}
 
-	async update(week: Week): Promise<void> {
-		console.log("updating week with data", { week });
-		const weekId = this.buildWeekId(new Date([...week.keys()][0]));
+	async updateWeek(week: Week): Promise<void> {
+		const weekId = this.getWeekId(new Date([...week.keys()][0]));
 
 		try {
 			await this.firebaseClient.addOrUpdateDocWithDedicatedId("weeks", week, weekId);
@@ -63,13 +61,30 @@ export class WeekRepository {
 		}
 	}
 
+	async addWeek(week: Week): Promise<void> {
+		const weekId = this.getWeekId(new Date([...week.keys()][0]));
+
+		try {
+			await this.firebaseClient.addOrUpdateDocWithDedicatedId("weeks", week, weekId);
+			this.week$$.next(week);
+			this.weeks$$.next(this.weeks$$.value.set(weekId, week));
+			this.activeWeekId$$.next(weekId);
+		} catch (e) {
+			console.error("Oh man, error while adding a new week with ID:", weekId, e);
+		}
+	}
+
 	async setActiveWeekId(weekId: WeekId): Promise<void> {
 		await this.fetchWeek(weekId);
 		this.activeWeekId$$.next(weekId);
 	}
 
-	private buildWeekId(date: Date): WeekId {
-		return `${getYear(date)}-W${getISOWeek(date)}` as WeekId;
+	getWeekId(date: Date): WeekId {
+		return `${getYear(date)}-W${String(getISOWeek(date)).padStart(2, "0")}` as WeekId;
+	}
+
+	formatDate(date: Date): string {
+		return format(date, "yyyy-MM-dd");
 	}
 
 	private buildWeekFromDocData(docData: DocumentData): Week {

@@ -11,7 +11,7 @@ import { ChangeDetectionStrategy, Component, ViewChild, inject } from "@angular/
 import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatTableModule } from "@angular/material/table";
-import { filter, map, tap } from "rxjs";
+import { filter, map, tap, withLatestFrom } from "rxjs";
 import { AddMealComponent } from "../../components/add-meal/add-meal.component";
 import { HeaderComponent } from "../../components/header/header.component";
 import { MealIdToNamePipe } from "../../pipes/meal-id-to-name.pipe";
@@ -22,6 +22,8 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatSelectModule } from "@angular/material/select";
 import { WeekIdToDateRangePipe } from "../../pipes/week-id-to-date-range.pipe";
 import { AddWeekComponent } from "../../components/add-week/add-week.component";
+import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
+import { parseISO } from "date-fns";
 
 @Component({
 	selector: "app-plan",
@@ -36,6 +38,7 @@ import { AddWeekComponent } from "../../components/add-week/add-week.component";
 		MatSelectModule,
 		MatTableModule,
 		MatDialogModule,
+		MatSnackBarModule,
 		DragDropModule,
 		MealIdToNamePipe,
 		WeekIdToDateRangePipe
@@ -47,6 +50,7 @@ import { AddWeekComponent } from "../../components/add-week/add-week.component";
 export class PlanComponent {
 	public readonly weekRepository = inject(WeekRepository);
 	private readonly dialog = inject(MatDialog);
+	private readonly snackBar = inject(MatSnackBar);
 
 	@ViewChild("dropListGroup") group: CdkDropListGroup<CdkDropList>;
 
@@ -115,12 +119,24 @@ export class PlanComponent {
 	}
 
 	onWeekAdd(): void {
-		this.dialog.open(AddWeekComponent).afterClosed().subscribe(console.log);
+		this.dialog
+			.open(AddWeekComponent)
+			.afterClosed()
+			.pipe(filter(Boolean), withLatestFrom(this.weekIds$))
+			.subscribe(([selectedWeekDates, weekIds]: [Date[], WeekId[]]) => {
+				const selectedWeekId = this.weekRepository.getWeekId(selectedWeekDates[0]);
 
-		// TODO
-		// 1. get the last weekId available and +1 to it
-		// 2. build the week and add to weeks$
-		console.log("hey");
+				if (weekIds.includes(selectedWeekId)) {
+					this.openSnackBar(
+						`Week that starts with ${this.weekRepository.formatDate(
+							parseISO(selectedWeekId)
+						)} already exists.`,
+						"Oh, cool"
+					);
+				} else {
+					this.addNewWeek(selectedWeekDates);
+				}
+			});
 	}
 
 	private async updateWeek(): Promise<void> {
@@ -134,6 +150,21 @@ export class PlanComponent {
 		updatedWeek.set(this.weekDates[5], this.saturdayMeals);
 		updatedWeek.set(this.weekDates[6], this.sundayMeals);
 
-		await this.weekRepository.update(updatedWeek);
+		await this.weekRepository.updateWeek(updatedWeek);
+	}
+
+	private async addNewWeek(weekDates: Date[]): Promise<void> {
+		const formattedWeekDates = weekDates.map(this.weekRepository.formatDate);
+		const newWeek = new Map<string, MealId[]>();
+
+		formattedWeekDates.forEach((date) => newWeek.set(date, []));
+
+		await this.weekRepository.addWeek(newWeek);
+
+		this.openSnackBar("Week added!", "Nice!");
+	}
+
+	private openSnackBar(message: string, action: string) {
+		this.snackBar.open(message, action, { duration: 5000 });
 	}
 }
