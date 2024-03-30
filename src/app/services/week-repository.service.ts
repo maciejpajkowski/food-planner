@@ -69,7 +69,7 @@ export class WeekRepository {
 	}
 
 	private buildWeekId(date: Date): WeekId {
-		return `${getYear(date)}-${getISOWeek(date)}` as WeekId;
+		return `${getYear(date)}-W${getISOWeek(date)}` as WeekId;
 	}
 
 	private buildWeekFromDocData(docData: DocumentData): Week {

@@ -14,6 +14,7 @@ import { routes } from "./app.routes";
 import { IngredientsRepository } from "./services/ingredients-repository.service";
 import { MealsRepository } from "./services/meals-repository.service";
 import { WeekRepository } from "./services/week-repository.service";
+import { provideNativeDateAdapter } from "@angular/material/core";
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
 	signInFlow: "popup",
@@ -43,6 +44,7 @@ export const appConfig: ApplicationConfig = {
 		{ provide: FIREBASE_OPTIONS, useValue: firebaseConfig },
 		provideRouter(routes),
 		provideAnimations(),
+		provideNativeDateAdapter(),
 		importProvidersFrom([
 			provideFirebaseApp(() => initializeApp(firebaseConfig)),
 			provideFirestore(() => getFirestore()),

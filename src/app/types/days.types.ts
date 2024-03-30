@@ -4,4 +4,4 @@ export type Day = MealId[];
 
 export type Week = Map<string, Day>;
 export type WeekEntries = Array<[string, MealId[]]>;
-export type WeekId = string & { _week_id_: never };
+export type WeekId = string & { _week_id_: never }; // ISO Week, eg. "2024-W13"

@@ -1,0 +1,28 @@
+<h2>Add week</h2>
+<p>
+	Select <strong>MONDAY</strong> of the week you want to add. If the week already exists, it will
+	not be overwritten.
+</p>
+
+<mat-form-field>
+	<mat-label>Choose a date</mat-label>
+	<input matInput [matDatepicker]="picker" />
+	<mat-hint>MM/DD/YYYY</mat-hint>
+	<mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+	<mat-datepicker #picker></mat-datepicker>
+</mat-form-field>
+
+<div class="add-week__actions">
+	<button class="add-week__action-button" type="button" mat-raised-button (click)="onCancel()">
+		Cancel
+	</button>
+	<button
+		class="add-week__action-button"
+		type="button"
+		mat-raised-button
+		color="primary"
+		(click)="onSubmit()"
+	>
+		Add!
+	</button>
+</div>

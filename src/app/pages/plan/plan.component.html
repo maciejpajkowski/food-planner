@@ -1,7 +1,8 @@
 <app-header>Plan</app-header>
 <div class="plan">
 	<div class="plan__week-select-wrapper">
-		<button mat-raised-button class="plan__previous-week-button"><</button>
+		<!-- <button mat-raised-button class="plan__previous-week-button"><</button> -->
+		<span>Current week:</span>
 		<mat-select
 			class="plan__week-select"
 			(valueChange)="onWeekSelectionChange($event)"
@@ -11,7 +12,16 @@
 				<mat-option [value]="weekId">{{ weekId | weekIdToDateRange }}</mat-option>
 			}
 		</mat-select>
-		<button mat-raised-button class="plan__next-week-button">></button>
+		<!-- <button mat-raised-button class="plan__next-week-button">></button> -->
+
+		<button
+			mat-raised-button
+			color="accent"
+			class="plan__next-week-button"
+			(click)="onWeekAdd()"
+		>
+			Add week
+		</button>
 	</div>
 	@if (week$ | async; as week) {
 		<div #dropListGroup cdkDropListGroup class="plan__week">

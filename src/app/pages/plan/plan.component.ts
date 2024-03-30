@@ -11,7 +11,7 @@ import { ChangeDetectionStrategy, Component, ViewChild, inject } from "@angular/
 import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatTableModule } from "@angular/material/table";
-import { map, tap } from "rxjs";
+import { filter, map, tap } from "rxjs";
 import { AddMealComponent } from "../../components/add-meal/add-meal.component";
 import { HeaderComponent } from "../../components/header/header.component";
 import { MealIdToNamePipe } from "../../pipes/meal-id-to-name.pipe";
@@ -21,6 +21,7 @@ import { MealId } from "../../types/meal.types";
 import { MatButtonModule } from "@angular/material/button";
 import { MatSelectModule } from "@angular/material/select";
 import { WeekIdToDateRangePipe } from "../../pipes/week-id-to-date-range.pipe";
+import { AddWeekComponent } from "../../components/add-week/add-week.component";
 
 @Component({
 	selector: "app-plan",
@@ -29,6 +30,7 @@ import { WeekIdToDateRangePipe } from "../../pipes/week-id-to-date-range.pipe";
 		CommonModule,
 		HeaderComponent,
 		AddMealComponent,
+		AddWeekComponent,
 		MatSidenavModule,
 		MatButtonModule,
 		MatSelectModule,
@@ -48,13 +50,13 @@ export class PlanComponent {
 
 	@ViewChild("dropListGroup") group: CdkDropListGroup<CdkDropList>;
 
-	mondayMeals: MealId[] = [];
-	tuesdayMeals: MealId[] = [];
-	wednesdayMeals: MealId[] = [];
-	thursdayMeals: MealId[] = [];
-	fridayMeals: MealId[] = [];
-	saturdayMeals: MealId[] = [];
-	sundayMeals: MealId[] = [];
+	mondayMeals: MealId[];
+	tuesdayMeals: MealId[];
+	wednesdayMeals: MealId[];
+	thursdayMeals: MealId[];
+	fridayMeals: MealId[];
+	saturdayMeals: MealId[];
+	sundayMeals: MealId[];
 
 	weekDates: string[] = [];
 	week$ = this.weekRepository.week$.pipe(
@@ -101,6 +103,7 @@ export class PlanComponent {
 		this.dialog
 			.open(AddMealComponent)
 			.afterClosed()
+			.pipe(filter(Boolean))
 			.subscribe(async ({ selectedMeal }) => {
 				dayMeals.push(selectedMeal);
 				await this.updateWeek();
@@ -109,6 +112,15 @@ export class PlanComponent {
 
 	onWeekSelectionChange(weekId: WeekId): void {
 		this.weekRepository.setActiveWeekId(weekId);
+	}
+
+	onWeekAdd(): void {
+		this.dialog.open(AddWeekComponent).afterClosed().subscribe(console.log);
+
+		// TODO
+		// 1. get the last weekId available and +1 to it
+		// 2. build the week and add to weeks$
+		console.log("hey");
 	}
 
 	private async updateWeek(): Promise<void> {
