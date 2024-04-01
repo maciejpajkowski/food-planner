@@ -91,6 +91,7 @@
 				"deploy": {
 					"builder": "angular-cli-ghpages:deploy",
 					"options": {
+						"baseHref": "https://maciejpajkowski.github.io/food-planner/",
 						"buildTarget": "food-planner:build:production"
 					}
 				}

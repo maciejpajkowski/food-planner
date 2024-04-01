@@ -44,7 +44,7 @@ export const appConfig: ApplicationConfig = {
 			provide: APP_INITIALIZER,
 			useFactory: getInitialData,
 			multi: true,
-			deps: [MealsRepository, IngredientsRepository, WeekRepository]
+			deps: [Auth, MealsRepository, IngredientsRepository, WeekRepository]
 		},
 		{ provide: FIREBASE_OPTIONS, useValue: firebaseConfig },
 		provideRouter(routes),
