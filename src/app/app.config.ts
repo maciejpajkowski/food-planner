@@ -27,14 +27,14 @@ function getInitialData(
 	ingredientsRepository: IngredientsRepository,
 	weekRepository: WeekRepository
 ) {
-	return () => {
-		auth.onAuthStateChanged(async (user) => {
-			if (user) {
-				await mealsRepository.fetch();
-				await ingredientsRepository.fetch();
-				await weekRepository.fetchAllWeeks();
-			}
-		});
+	return async () => {
+		await auth.authStateReady();
+
+		if (auth.currentUser) {
+			await mealsRepository.fetch();
+			await ingredientsRepository.fetch();
+			await weekRepository.fetchAllWeeks();
+		}
 	};
 }
 

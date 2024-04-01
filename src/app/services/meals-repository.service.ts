@@ -1,8 +1,8 @@
 import { Injectable, inject } from "@angular/core";
+import { Auth } from "@angular/fire/auth";
 import { BehaviorSubject } from "rxjs";
 import { Meal, MealId } from "../types/meal.types";
 import { FirebaseClient } from "./firebase-client.service";
-import { Auth } from "@angular/fire/auth";
 import { IngredientsRepository } from "./ingredients-repository.service";
 
 @Injectable({
@@ -36,6 +36,7 @@ export class MealsRepository {
 
 		try {
 			await this.firebaseClient.addOrUpdateDoc("meals", meal);
+			await this.ingredientsRepository.updateMealAssignments(meal);
 		} catch (e) {
 			console.error("Oh man, error while adding meal:", e);
 		}
@@ -43,11 +44,15 @@ export class MealsRepository {
 
 	async update(meal: Meal): Promise<void> {
 		try {
+			const changedIngredientIds = this.getMealById(meal.id)?.ingredientIds.filter(
+				(currentIngredientId) =>
+					!meal.ingredientIds.some(
+						(updatedIngredientId) => currentIngredientId === updatedIngredientId
+					)
+			);
+
 			await this.firebaseClient.addOrUpdateDoc("meals", meal);
-			// await this.firebaseClient.updateMultipleDocs(
-			// 	"ingredients",
-			// 	this.ingredientsRepository.getMultipleIngredientsByIds(meal.ingredientIds)
-			// ); // TODO - not working as intended yet, need to assign the meal to all ingredients first
+			await this.ingredientsRepository.updateMealAssignments(meal, changedIngredientIds);
 		} catch (e) {
 			console.error("Oh man, error while editing meal:", e);
 		}
@@ -59,6 +64,10 @@ export class MealsRepository {
 		} catch (e) {
 			console.error("Oh man, error while removing meal:", e);
 		}
+	}
+
+	getMealById(id: MealId): Meal | undefined {
+		return this.meals$$.value?.find((meal) => id === meal.id);
 	}
 
 	getNameFromId(id: MealId): string | undefined {

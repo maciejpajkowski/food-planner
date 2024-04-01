@@ -58,7 +58,7 @@ export class EditIngredientComponent {
 		this.dialogRef.close({
 			id: this.isEditMode ? this.data.id : 0, // 0 is overridden by ingredients repository once the ingredient is saved in db
 			name: this.name.value,
-			mealIds: this.data.mealIds
+			mealIds: this.isEditMode ? this.data.mealIds : []
 		} as Ingredient);
 	}
 }

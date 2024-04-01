@@ -3,6 +3,7 @@ import { Auth } from "@angular/fire/auth";
 import { BehaviorSubject } from "rxjs";
 import { Ingredient, IngredientId } from "../types/ingredient.types";
 import { FirebaseClient } from "./firebase-client.service";
+import { Meal } from "../types/meal.types";
 
 @Injectable({
 	providedIn: "root"
@@ -54,10 +55,30 @@ export class IngredientsRepository {
 		}
 	}
 
-	// assignMealToIngredients(meal: Meal): void {
-	// 	// 1. lista ID skladnikow z meala
-	// 	// 2. iteracja po nich, dla kazdego trzeba zlapac liste przypisanych meali
-	// }
+	async updateMealAssignments(meal: Meal, removedIngredients?: IngredientId[]): Promise<void> {
+		const ingredientIdsInMeal = meal.ingredientIds;
+
+		ingredientIdsInMeal.forEach(async (ingredientId) => {
+			const ingredient = this.getIngredientById(ingredientId);
+
+			if (ingredient && !ingredient.mealIds.includes(meal.id)) {
+				ingredient.mealIds.push(meal.id);
+				await this.update(ingredient);
+			}
+		});
+
+		removedIngredients?.forEach(async (removedIngredientId) => {
+			const ingredient = this.getIngredientById(removedIngredientId);
+
+			if (ingredient) {
+				const mealIdIndex = ingredient.mealIds.indexOf(meal.id);
+				ingredient.mealIds.splice(mealIdIndex, 1);
+				await this.update(ingredient);
+			}
+		});
+
+		await this.fetch();
+	}
 
 	getIngredientById(id: IngredientId): Ingredient | undefined {
 		return this.ingredients$$.value?.find((ingredient) => id === ingredient.id);

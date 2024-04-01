@@ -10,6 +10,7 @@ import { HeaderComponent } from "../../components/header/header.component";
 import { IngredientIdToNamePipe } from "../../pipes/ingredient-id-to-name.pipe";
 import { MealsRepository } from "../../services/meals-repository.service";
 import { Meal, MealId } from "../../types/meal.types";
+import { filter } from "rxjs";
 
 @Component({
 	selector: "app-meals",
@@ -39,9 +40,8 @@ export class MealsComponent {
 		this.dialog
 			.open(EditMealComponent)
 			.afterClosed()
+			.pipe(filter(Boolean))
 			.subscribe(async (meal: Meal) => {
-				if (!meal) return;
-
 				await this.mealsRepository.add(meal);
 				await this.mealsRepository.fetch();
 			});
@@ -51,9 +51,8 @@ export class MealsComponent {
 		this.dialog
 			.open(EditMealComponent, { data })
 			.afterClosed()
+			.pipe(filter(Boolean))
 			.subscribe(async (meal: Meal | { id: MealId; delete: true }) => {
-				if (!meal) return;
-
 				if ("delete" in meal) {
 					await this.mealsRepository.delete(meal.id);
 					await this.mealsRepository.fetch();
