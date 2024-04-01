@@ -1,6 +1,6 @@
 import { APP_INITIALIZER, ApplicationConfig, importProvidersFrom } from "@angular/core";
 import { initializeApp, provideFirebaseApp } from "@angular/fire/app";
-import { getAuth, provideAuth } from "@angular/fire/auth";
+import { Auth, getAuth, provideAuth } from "@angular/fire/auth";
 import { FIREBASE_OPTIONS } from "@angular/fire/compat";
 import { getFirestore, provideFirestore } from "@angular/fire/firestore";
 import { provideRouter } from "@angular/router";
@@ -22,14 +22,19 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
 };
 
 function getInitialData(
+	auth: Auth,
 	mealsRepository: MealsRepository,
 	ingredientsRepository: IngredientsRepository,
 	weekRepository: WeekRepository
 ) {
-	return async () => {
-		await mealsRepository.fetch();
-		await ingredientsRepository.fetch();
-		await weekRepository.fetchAllWeeks();
+	return () => {
+		auth.onAuthStateChanged(async (user) => {
+			if (user) {
+				await mealsRepository.fetch();
+				await ingredientsRepository.fetch();
+				await weekRepository.fetchAllWeeks();
+			}
+		});
 	};
 }
 

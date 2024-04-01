@@ -37,7 +37,7 @@
 								{
 									"type": "initial",
 									"maximumWarning": "500kb",
-									"maximumError": "1mb"
+									"maximumError": "2mb"
 								},
 								{
 									"type": "anyComponentStyle",
@@ -89,7 +89,10 @@
 					}
 				},
 				"deploy": {
-					"builder": "angular-cli-ghpages:deploy"
+					"builder": "angular-cli-ghpages:deploy",
+					"options": {
+						"buildTarget": "food-planner:build:production"
+					}
 				}
 			}
 		}

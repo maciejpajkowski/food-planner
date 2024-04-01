@@ -2,9 +2,6 @@
 
 ### Must have:
 
--   Week selector
-    -   Previous week & next week buttons
-    -   Ability to add next week
 -   Properly assign ingredients to meals
 -   Improve styles
 -   RWD (with slider?)
