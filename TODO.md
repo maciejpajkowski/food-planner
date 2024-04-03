@@ -3,7 +3,6 @@
 ### Must have:
 
 -   RWD (with slider?)
--   Meal search by tag on meal view
 -   Proper Prod & Staging envs
 
 ### Nice to have:

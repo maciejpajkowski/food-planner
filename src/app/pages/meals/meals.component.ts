@@ -1,16 +1,16 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
-import { MatChipsModule } from "@angular/material/chips";
+import { MatChipSelectionChange, MatChipsModule } from "@angular/material/chips";
 import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatTableModule } from "@angular/material/table";
+import { BehaviorSubject, combineLatest, filter, map } from "rxjs";
 import { EditMealComponent } from "../../components/edit-meal/edit-meal.component";
 import { HeaderComponent } from "../../components/header/header.component";
 import { IngredientIdToNamePipe } from "../../pipes/ingredient-id-to-name.pipe";
 import { MealsRepository } from "../../services/meals-repository.service";
 import { Meal, MealId } from "../../types/meal.types";
-import { filter } from "rxjs";
 
 @Component({
 	selector: "app-meals",
@@ -32,7 +32,24 @@ export class MealsComponent {
 	private readonly dialog = inject(MatDialog);
 	private readonly mealsRepository = inject(MealsRepository);
 
-	meals$ = this.mealsRepository.meals$;
+	activeSearchTag$$ = new BehaviorSubject<string>("");
+
+	meals$ = combineLatest([this.mealsRepository.meals$, this.activeSearchTag$$]).pipe(
+		map(([meals, activeSearchTag]) =>
+			activeSearchTag ? meals?.filter((meal) => meal.tags.includes(activeSearchTag)) : meals
+		)
+	);
+
+	tags$ = this.mealsRepository.meals$.pipe(
+		map((meals) => {
+			const tags = new Set<string>();
+			meals?.forEach((meal) => {
+				meal.tags.forEach((tag) => tags.add(tag));
+			});
+
+			return tags;
+		})
+	);
 
 	displayedColumns = ["name", "ingredients", "tags"];
 
@@ -61,5 +78,9 @@ export class MealsComponent {
 					await this.mealsRepository.fetch();
 				}
 			});
+	}
+
+	setActiveSearchTag(event: MatChipSelectionChange, tag: string): void {
+		event.selected ? this.activeSearchTag$$.next(tag) : this.activeSearchTag$$.next("");
 	}
 }
