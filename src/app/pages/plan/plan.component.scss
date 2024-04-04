@@ -3,10 +3,12 @@
 }
 
 .plan__week-select-wrapper {
-	display: inline-flex;
-	margin-right: auto;
+	display: flex;
 	align-items: center;
+	justify-content: center;
 	margin-bottom: 32px;
+	flex-wrap: wrap;
+	flex-direction: column;
 }
 
 .plan__week-select {
@@ -14,8 +16,8 @@
 	text-align: center;
 }
 
-.plan__next-week-button {
-	margin-left: 16px;
+.plan__add-week-button {
+	margin-top: 16px;
 }
 
 .plan__week {
@@ -25,7 +27,7 @@
 }
 
 .plan__day {
-	max-width: 100%;
+	width: 100%;
 	margin: 0 25px 25px 0;
 	display: inline-block;
 	vertical-align: top;
@@ -56,20 +58,23 @@
 	justify-content: space-between;
 	box-sizing: border-box;
 	cursor: move;
-	background: white;
+	background: beige;
 	font-size: 14px;
 }
 
 .plan__meal--static {
 	cursor: default;
+	background: white;
+	border-style: dashed;
 }
 
 .plan__delete-meal-button {
 	position: absolute;
-	top: 2px;
-	right: 4px;
+	top: 30%;
+	right: 10px;
 	font-size: 12px;
 	cursor: pointer;
+	color: darkred;
 }
 
 .plan__add-meal-button {
@@ -103,4 +108,28 @@
 
 .plan__day-list.cdk-drop-list-dragging .plan__meal:not(.cdk-drag-placeholder) {
 	transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+swiper-container {
+	width: 100%;
+}
+
+@media (min-width: 480px) {
+	.plan__day {
+		max-width: 100%;
+	}
+}
+
+@media (min-width: 600px) {
+	.plan__week-select-wrapper {
+		display: inline-flex;
+		margin-right: auto;
+		flex-direction: row;
+		flex-wrap: wrap;
+	}
+
+	.plan__add-week-button {
+		margin-top: 0;
+		margin-left: 16px;
+	}
 }

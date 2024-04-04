@@ -7,7 +7,13 @@ import {
 	transferArrayItem
 } from "@angular/cdk/drag-drop";
 import { CommonModule } from "@angular/common";
-import { ChangeDetectionStrategy, Component, ViewChild, inject } from "@angular/core";
+import {
+	CUSTOM_ELEMENTS_SCHEMA,
+	ChangeDetectionStrategy,
+	Component,
+	ViewChild,
+	inject
+} from "@angular/core";
 import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatTableModule } from "@angular/material/table";
@@ -24,6 +30,8 @@ import { WeekIdToDateRangePipe } from "../../pipes/week-id-to-date-range.pipe";
 import { AddWeekComponent } from "../../components/add-week/add-week.component";
 import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
 import { parseISO } from "date-fns";
+import { planBreakpoints } from "./plan-breakpoints.config";
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
 	selector: "app-plan",
@@ -39,12 +47,14 @@ import { parseISO } from "date-fns";
 		MatTableModule,
 		MatDialogModule,
 		MatSnackBarModule,
+		MatIconModule,
 		DragDropModule,
 		MealIdToNamePipe,
 		WeekIdToDateRangePipe
 	],
 	templateUrl: "./plan.component.html",
 	styleUrl: "./plan.component.scss",
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PlanComponent {
@@ -80,6 +90,8 @@ export class PlanComponent {
 	);
 
 	weekIds$ = this.weekRepository.weeks$.pipe(map((weeksMap) => [...weeksMap.keys()]));
+
+	readonly planBreakpoints = planBreakpoints;
 
 	async handleDrop(event: CdkDragDrop<MealId[]>): Promise<void> {
 		if (event.previousContainer === event.container) {

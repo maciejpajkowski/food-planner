@@ -5,6 +5,7 @@ import { MatSidenav, MatSidenavModule } from "@angular/material/sidenav";
 import { RouterOutlet } from "@angular/router";
 import { DrawerComponent } from "./components/drawer/drawer.component";
 import { SidenavService } from "./services/sidenav.service";
+import { register } from "swiper/element/bundle";
 
 @Component({
 	selector: "app-root",
@@ -19,5 +20,6 @@ export class AppComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.sidenavService.registerSidenav(this.sidenavRef);
+		register(); // enable swiper
 	}
 }

@@ -2,7 +2,6 @@
 
 ### Must have:
 
--   RWD (with slider?)
 -   Proper Prod & Staging envs
 
 ### Nice to have:
