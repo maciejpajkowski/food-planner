@@ -93,13 +93,8 @@ export class IngredientsRepository {
 	}
 
 	private generateNewIngredientId(): number {
-		if (this.ingredients$$.value) {
-			return (
-				Math.max(...this.ingredients$$.value.map((ingredient) => ingredient.id as number)) +
-				1
-			);
-		} else {
-			throw new Error("Cannot generate new ingredient ID, ingredients$$ is empty");
-		}
+		const ingredientIds =
+			this.ingredients$$.value?.map((ingredient) => ingredient.id as number) ?? [];
+		return Math.max(...ingredientIds, 0) + 1;
 	}
 }

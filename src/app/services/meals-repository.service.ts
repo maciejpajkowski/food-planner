@@ -75,10 +75,7 @@ export class MealsRepository {
 	}
 
 	private generateNewMealId(): number {
-		if (this.meals$$.value) {
-			return Math.max(...this.meals$$.value.map((meal) => meal.id as number)) + 1;
-		} else {
-			throw new Error("Cannot generate new meal ID, meals$$ is empty");
-		}
+		const mealIds = this.meals$$.value?.map((meal) => meal.id as number) ?? [];
+		return Math.max(...mealIds, 0) + 1;
 	}
 }
