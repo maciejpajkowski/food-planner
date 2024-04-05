@@ -1,13 +1,23 @@
 <h3>Add meal</h3>
 
-<mat-form-field appearance="outline">
-	<mat-label>Pick a meal!</mat-label>
-	<mat-select [(value)]="selectedMeal">
-		@for (meal of mealsRepository.meals$ | async; track meal) {
-			<mat-option [value]="meal.id">{{ meal.name }}</mat-option>
-		}
-	</mat-select>
-</mat-form-field>
+@if (mealsRepository.meals$ | async; as meals) {
+	@if (meals.length) {
+		<mat-form-field appearance="outline">
+			<mat-label>Pick a meal!</mat-label>
+			<mat-select [(value)]="selectedMeal">
+				@for (meal of mealsRepository.meals$ | async; track meal) {
+					<mat-option [value]="meal.id">{{ meal.name }}</mat-option>
+				}
+			</mat-select>
+		</mat-form-field>
+	} @else {
+		<p>
+			Looks like you don't have any meals in your database yet. Click
+			<span class="add-meal__redirect" (click)="onMealsRedirect()">HERE</span> to go to the
+			meals page and create some!
+		</p>
+	}
+}
 
 <div class="add-meal__actions">
 	<button class="add-meal__action-button" type="button" mat-raised-button (click)="onCancel()">

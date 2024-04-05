@@ -1,10 +1,11 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
-import { MatSelectModule } from "@angular/material/select";
-import { MealsRepository } from "../../services/meals-repository.service";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDialogRef } from "@angular/material/dialog";
+import { MatSelectModule } from "@angular/material/select";
+import { Router } from "@angular/router";
+import { MealsRepository } from "../../services/meals-repository.service";
 
 @Component({
 	selector: "app-add-meal",
@@ -14,8 +15,9 @@ import { MatDialogRef } from "@angular/material/dialog";
 	styleUrl: "./add-meal.component.scss"
 })
 export class AddMealComponent {
-	public readonly mealsRepository = inject(MealsRepository);
-	public readonly dialogRef = inject(MatDialogRef<AddMealComponent>);
+	readonly mealsRepository = inject(MealsRepository);
+	readonly dialogRef = inject(MatDialogRef<AddMealComponent>);
+	private readonly router = inject(Router);
 
 	selectedMeal = null;
 
@@ -25,5 +27,10 @@ export class AddMealComponent {
 
 	onSubmit(): void {
 		this.dialogRef.close({ selectedMeal: this.selectedMeal });
+	}
+
+	onMealsRedirect(): void {
+		this.dialogRef.close();
+		this.router.navigate(["/meals"]);
 	}
 }

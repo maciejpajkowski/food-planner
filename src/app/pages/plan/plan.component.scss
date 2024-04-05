@@ -110,6 +110,15 @@
 	transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
+.plan__loading-wrapper {
+	position: fixed;
+	width: 100vw;
+	height: 30vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 swiper-container {
 	width: 100%;
 }

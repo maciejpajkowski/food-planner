@@ -1,5 +1,4 @@
 import { Injectable, inject } from "@angular/core";
-import { Auth } from "@angular/fire/auth";
 import { compareAsc, format, getISOWeek, getYear, parseISO } from "date-fns";
 import { DocumentData } from "firebase/firestore";
 import { BehaviorSubject } from "rxjs";
@@ -11,10 +10,9 @@ import { FirebaseClient } from "./firebase-client.service";
 	providedIn: "root"
 })
 export class WeekRepository {
-	private readonly auth = inject(Auth);
 	private readonly firebaseClient = inject(FirebaseClient);
 
-	private readonly week$$ = new BehaviorSubject<Week>(new Map());
+	private readonly week$$ = new BehaviorSubject<Week | null>(null);
 	private readonly weeks$$ = new BehaviorSubject<Map<WeekId, Week>>(new Map());
 	private readonly activeWeekId$$ = new BehaviorSubject<WeekId | null>(null);
 
@@ -23,8 +21,6 @@ export class WeekRepository {
 	readonly activeWeekId$ = this.activeWeekId$$.asObservable();
 
 	async fetchAllWeeks(): Promise<void> {
-		await this.auth.authStateReady();
-
 		const response = await this.firebaseClient.getDocs("weeks");
 
 		const weeks = new Map<WeekId, Week>();
@@ -35,8 +31,13 @@ export class WeekRepository {
 			});
 
 		this.weeks$$.next(weeks);
-		this.week$$.next([...weeks.values()].at(-1) as Week);
-		this.activeWeekId$$.next([...weeks.keys()].at(-1) as WeekId);
+
+		if (weeks.size) {
+			this.week$$.next([...weeks.values()].at(-1) as Week);
+			this.activeWeekId$$.next([...weeks.keys()].at(-1) as WeekId);
+		} else {
+			this.week$$.next(new Map());
+		}
 	}
 
 	async fetchWeek(weekId: WeekId): Promise<void> {

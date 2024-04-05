@@ -28,13 +28,13 @@ function getInitialData(
 	weekRepository: WeekRepository
 ) {
 	return async () => {
-		await auth.authStateReady();
-
-		if (auth.currentUser) {
-			await mealsRepository.fetch();
-			await ingredientsRepository.fetch();
-			await weekRepository.fetchAllWeeks();
-		}
+		auth.onAuthStateChanged(async (user) => {
+			if (user) {
+				await mealsRepository.fetch();
+				await ingredientsRepository.fetch();
+				await weekRepository.fetchAllWeeks();
+			}
+		});
 	};
 }
 

@@ -32,6 +32,7 @@ import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
 import { parseISO } from "date-fns";
 import { planBreakpoints } from "./plan-breakpoints.config";
 import { MatIconModule } from "@angular/material/icon";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 @Component({
 	selector: "app-plan",
@@ -48,6 +49,7 @@ import { MatIconModule } from "@angular/material/icon";
 		MatDialogModule,
 		MatSnackBarModule,
 		MatIconModule,
+		MatProgressSpinnerModule,
 		DragDropModule,
 		MealIdToNamePipe,
 		WeekIdToDateRangePipe
@@ -74,7 +76,9 @@ export class PlanComponent {
 
 	weekDates: string[] = [];
 	week$ = this.weekRepository.week$.pipe(
-		tap((data: Week) => {
+		tap((data: Week | null) => {
+			if (!data) return;
+
 			this.weekDates = [...data.keys()];
 
 			const dayMeals = [...data.values()];
