@@ -48,8 +48,8 @@
 							"outputHashing": "all",
 							"fileReplacements": [
 								{
-									"replace": "firebase.config.ts",
-									"with": "firebase.config.prod.ts"
+									"replace": "./firebase.config.ts",
+									"with": "./firebase.config.prod.ts"
 								}
 							]
 						},
