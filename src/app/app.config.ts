@@ -9,7 +9,7 @@ import { provideAnimations } from "@angular/platform-browser/animations";
 import firebase from "firebase/compat/app";
 import firebaseui from "firebaseui";
 import { FirebaseUIModule } from "firebaseui-angular";
-import { firebaseConfig } from "../../firebase.config.prod";
+import { firebaseConfig } from "../../firebase.config";
 import { routes } from "./app.routes";
 import { IngredientsRepository } from "./services/ingredients-repository.service";
 import { MealsRepository } from "./services/meals-repository.service";
