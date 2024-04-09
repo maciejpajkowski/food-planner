@@ -1,9 +1,5 @@
 # TODO
 
-### Must have:
-
--   Proper Prod & Staging envs
-
 ### Nice to have:
 
 -   Improve styles
