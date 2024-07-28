@@ -1,5 +1,5 @@
 import { Injectable, inject } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, map } from "rxjs";
 import { Ingredient, IngredientId } from "../types/ingredient.types";
 import { Meal } from "../types/meal.types";
 import { FirebaseClient } from "./firebase-client.service";
@@ -12,7 +12,21 @@ export class IngredientsRepository {
 
 	private readonly ingredients$$ = new BehaviorSubject<Ingredient[] | null>(null);
 
-	ingredients$ = this.ingredients$$.asObservable();
+	ingredients$ = this.ingredients$$.asObservable().pipe(
+		map(
+			(ingredients) =>
+				ingredients?.sort((a, b) => {
+					if (a.name < b.name) {
+						return -1;
+					}
+
+					if (a.name > b.name) {
+						return 1;
+					}
+					return 0;
+				}) ?? null
+		)
+	);
 
 	async fetch(): Promise<void> {
 		const response = await this.firebaseClient.getDocs("ingredients");
