@@ -67,8 +67,6 @@ export class FirebaseClient {
 		itemsToUpdate.forEach((item) => {
 			const itemRef = doc(this.getCollection(collectionName), String(item.id));
 
-			console.log({ item });
-
 			batch.update(itemRef, { ...item });
 		});
 

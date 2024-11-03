@@ -34,6 +34,7 @@ export class EditMealComponent implements OnInit, OnDestroy {
 	name = new FormControl(this.isEditMode ? this.data.name : "");
 	ingredients = new FormControl<Ingredient | null>(null);
 	tags = new FormControl<string>("");
+	notes = new FormControl<string>(this.isEditMode ? this.data.notes : "");
 
 	assignedTags$$ = new BehaviorSubject<string[]>(this.isEditMode ? [...this.data.tags] : []);
 	assignedIngredientIds$$ = new BehaviorSubject<IngredientId[]>(
@@ -101,6 +102,7 @@ export class EditMealComponent implements OnInit, OnDestroy {
 		this.dialogRef.close({
 			id: this.isEditMode ? this.data.id : 0, // 0 is overridden by meals repository once the meal is saved in db
 			name: this.name.value,
+			notes: this.notes.value,
 			ingredientIds: this.assignedIngredientIds$$.value,
 			tags: this.assignedTags$$.value
 		} as Meal);

@@ -70,7 +70,6 @@ export class MealsComponent {
 			.afterClosed()
 			.pipe(filter(Boolean))
 			.subscribe(async (meal: Meal | { id: MealId; delete: true }) => {
-				console.log(meal);
 				if ("delete" in meal) {
 					await this.mealsRepository.delete(meal.id);
 					await this.mealsRepository.fetch();

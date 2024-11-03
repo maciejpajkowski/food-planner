@@ -56,6 +56,12 @@
 	</mat-chip-listbox>
 </mat-form-field>
 
+<mat-form-field class="edit-meal__notes" appearance="outline">
+	<mat-label>Notes</mat-label>
+	<textarea matInput 
+	[formControl]="notes"></textarea>
+</mat-form-field>
+
 <div class="edit-meal__actions">
 	@if (isEditMode) {
 		<button

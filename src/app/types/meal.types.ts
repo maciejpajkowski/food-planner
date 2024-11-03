@@ -7,4 +7,5 @@ export interface Meal {
 	name: string;
 	ingredientIds: IngredientId[];
 	tags: string[]; // breakfast, dinner, snack
+	notes: string; // recipe, URL, general remarks etc.
 }
